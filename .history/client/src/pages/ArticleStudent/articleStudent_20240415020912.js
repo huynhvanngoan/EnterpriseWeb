@@ -68,7 +68,8 @@ const ArticleManagerStudent = () => {
     const [agreeTermsModalVisible, setAgreeTermsModalVisible] = useState(false);
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
     const [shouldFetch, setShouldFetch] = useState(true);
-    const [academicFinal, setAcademicFinal] = useState([]);
+    const [academicFinal, setAcademicFinal] = useState();
+    
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
@@ -318,6 +319,8 @@ const ArticleManagerStudent = () => {
                             setopenModalCreate(false);
                             setShouldFetch(true);
                             setIsCheckboxChecked(false);
+                            setFile(null);
+                        setImage(null);
                         }
                     });
                 } else {
@@ -332,6 +335,8 @@ const ArticleManagerStudent = () => {
                     description: "Failed to upload file",
                 });
                 setIsCheckboxChecked(false);
+                setFile(null);
+                        setImage(null);
             }
         } catch (error) {
             console.error("Failed to create article:", error);
@@ -826,7 +831,7 @@ const ArticleManagerStudent = () => {
                                 }
                             >
                                 {/* Render options for faculties */}
-                                {academicFinal.map((academic) => (
+                                {academics.map((academic) => (
                                     <Option
                                         key={academic._id}
                                         value={academic._id}

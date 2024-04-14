@@ -68,7 +68,6 @@ const ArticleManagerStudent = () => {
     const [agreeTermsModalVisible, setAgreeTermsModalVisible] = useState(false);
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
     const [shouldFetch, setShouldFetch] = useState(true);
-    const [academicFinal, setAcademicFinal] = useState([]);
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
@@ -519,6 +518,7 @@ const ArticleManagerStudent = () => {
                 const currentAcademic = academics.find(
                     (academic) => academic._id === record.academicyearId
                 );
+                console.log("check",currentAcademic)
                 const isFinalClosureDatePassed =
                     currentAcademic &&
                     new Date(currentAcademic.finalClosureDate) < Date.now();
@@ -542,7 +542,7 @@ const ArticleManagerStudent = () => {
                                     {"Detail"}
                                 </Button>
 
-                                {!isFinalClosureDatePassed && (
+                                {isFinalClosureDatePassed && (
                                     <>
                                         <Button
                                             onClick={() =>
@@ -617,7 +617,7 @@ const ArticleManagerStudent = () => {
                     (academic) =>
                         new Date(academic.finalClosureDate) >= Date.now()
                 );
-                setAcademicFinal(filteredAcademics);
+                setAcademics(filteredAcademics);
             } catch (error) {
                 console.error("Failed to fetch academics:", error);
             }
@@ -826,7 +826,7 @@ const ArticleManagerStudent = () => {
                                 }
                             >
                                 {/* Render options for faculties */}
-                                {academicFinal.map((academic) => (
+                                {academics.map((academic) => (
                                     <Option
                                         key={academic._id}
                                         value={academic._id}

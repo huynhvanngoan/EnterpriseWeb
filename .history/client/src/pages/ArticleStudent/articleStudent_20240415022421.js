@@ -68,7 +68,7 @@ const ArticleManagerStudent = () => {
     const [agreeTermsModalVisible, setAgreeTermsModalVisible] = useState(false);
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
     const [shouldFetch, setShouldFetch] = useState(true);
-    const [academicFinal, setAcademicFinal] = useState([]);
+    const [academicFinal, setAcademicFinal] = useState();
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
@@ -612,12 +612,12 @@ const ArticleManagerStudent = () => {
         const fetchAcademics = async () => {
             try {
                 const response = await academicApi.listAcademic();
-                setAcademics(response.data);
+                setAcademicFinal(response.data);
                 const filteredAcademics = response.data.filter(
                     (academic) =>
                         new Date(academic.finalClosureDate) >= Date.now()
                 );
-                setAcademicFinal(filteredAcademics);
+                setAcademics(filteredAcademics);
             } catch (error) {
                 console.error("Failed to fetch academics:", error);
             }
@@ -826,7 +826,7 @@ const ArticleManagerStudent = () => {
                                 }
                             >
                                 {/* Render options for faculties */}
-                                {academicFinal.map((academic) => (
+                                {academics.map((academic) => (
                                     <Option
                                         key={academic._id}
                                         value={academic._id}

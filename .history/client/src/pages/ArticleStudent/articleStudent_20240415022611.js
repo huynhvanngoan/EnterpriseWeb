@@ -68,7 +68,7 @@ const ArticleManagerStudent = () => {
     const [agreeTermsModalVisible, setAgreeTermsModalVisible] = useState(false);
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
     const [shouldFetch, setShouldFetch] = useState(true);
-    const [academicFinal, setAcademicFinal] = useState([]);
+    const [academicFinal, setAcademicFinal] = useState();
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
@@ -618,6 +618,7 @@ const ArticleManagerStudent = () => {
                         new Date(academic.finalClosureDate) >= Date.now()
                 );
                 setAcademicFinal(filteredAcademics);
+
             } catch (error) {
                 console.error("Failed to fetch academics:", error);
             }

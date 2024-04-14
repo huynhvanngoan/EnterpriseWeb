@@ -68,7 +68,7 @@ const ArticleManagerStudent = () => {
     const [agreeTermsModalVisible, setAgreeTermsModalVisible] = useState(false);
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
     const [shouldFetch, setShouldFetch] = useState(true);
-    const [academicFinal, setAcademicFinal] = useState([]);
+    const [academicFinal, setAcademicFinal] = useState()
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
@@ -515,76 +515,62 @@ const ArticleManagerStudent = () => {
         {
             title: "Action",
             key: "action",
-            render: (text, record) => {
-                const currentAcademic = academics.find(
-                    (academic) => academic._id === record.academicyearId
-                );
-                const isFinalClosureDatePassed =
-                    currentAcademic &&
-                    new Date(currentAcademic.finalClosureDate) < Date.now();
-                return (
-                    <div>
-                        <Row>
-                            <div style={{ marginLeft: 10 }}>
+            render: (text, record) => (
+                <div>
+                    <Row>
+                        <div style={{ marginLeft: 10 }}>
+                            <Button
+                                size="small"
+                                icon={<EyeOutlined />}
+                                style={{
+                                    width: 150,
+                                    borderRadius: 15,
+                                    height: 30,
+                                    marginBottom: 15,
+                                }}
+                                onClick={() =>
+                                    handleOpenDetailModal(record._id)
+                                }
+                            >
+                                {"Detail"}
+                            </Button>
+
+                            <Button
+                                onClick={() => showEditModal(record._id)}
+                                icon={<EditOutlined />}
+                                style={{
+                                    width: 150,
+                                    borderRadius: 15,
+                                    height: 30,
+                                    marginBottom: 15,
+                                }}
+                            >
+                                Edit
+                            </Button>
+                            <Popconfirm
+                                title="Are you sure to delete this article?"
+                                onConfirm={() =>
+                                    handleDeleteArticle(record._id)
+                                }
+                                okText="Yes"
+                                cancelText="No"
+                            >
                                 <Button
                                     size="small"
-                                    icon={<EyeOutlined />}
+                                    icon={<DeleteOutlined />}
                                     style={{
                                         width: 150,
                                         borderRadius: 15,
                                         height: 30,
-                                        marginBottom: 15,
                                     }}
-                                    onClick={() =>
-                                        handleOpenDetailModal(record._id)
-                                    }
                                 >
-                                    {"Detail"}
+                                    {"Delete"}
                                 </Button>
-
-                                {!isFinalClosureDatePassed && (
-                                    <>
-                                        <Button
-                                            onClick={() =>
-                                                showEditModal(record._id)
-                                            }
-                                            icon={<EditOutlined />}
-                                            style={{
-                                                width: 150,
-                                                borderRadius: 15,
-                                                height: 30,
-                                                marginBottom: 15,
-                                            }}
-                                        >
-                                            Edit
-                                        </Button>
-                                        <Popconfirm
-                                            title="Are you sure to delete this article?"
-                                            onConfirm={() =>
-                                                handleDeleteArticle(record._id)
-                                            }
-                                            okText="Yes"
-                                            cancelText="No"
-                                        >
-                                            <Button
-                                                size="small"
-                                                icon={<DeleteOutlined />}
-                                                style={{
-                                                    width: 150,
-                                                    borderRadius: 15,
-                                                    height: 30,
-                                                }}
-                                            >
-                                                {"Delete"}
-                                            </Button>
-                                        </Popconfirm>
-                                    </>
-                                )}
-                            </div>
-                        </Row>
-                    </div>
-                );
-            },
+                            </Popconfirm>
+                        </div>
+                    </Row>
+                </div>
+            ),
         },
     ];
 
@@ -617,7 +603,7 @@ const ArticleManagerStudent = () => {
                     (academic) =>
                         new Date(academic.finalClosureDate) >= Date.now()
                 );
-                setAcademicFinal(filteredAcademics);
+                setAcademics(filteredAcademics);
             } catch (error) {
                 console.error("Failed to fetch academics:", error);
             }
@@ -826,7 +812,7 @@ const ArticleManagerStudent = () => {
                                 }
                             >
                                 {/* Render options for faculties */}
-                                {academicFinal.map((academic) => (
+                                {academics.map((academic) => (
                                     <Option
                                         key={academic._id}
                                         value={academic._id}

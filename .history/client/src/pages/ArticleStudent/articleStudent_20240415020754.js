@@ -68,7 +68,8 @@ const ArticleManagerStudent = () => {
     const [agreeTermsModalVisible, setAgreeTermsModalVisible] = useState(false);
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
     const [shouldFetch, setShouldFetch] = useState(true);
-    const [academicFinal, setAcademicFinal] = useState([]);
+    const [academicFinal, setAcademicFinal] = useState();
+
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
@@ -428,8 +429,10 @@ const ArticleManagerStudent = () => {
                 setFileFormatError(false);
                 if (type === "image") {
                     setImage(file);
+                    setSelectedImage(file);
                 } else if (type === "file") {
                     setFile(file);
+                    setSelectedFile(file);
                 }
             } else {
                 setFileFormatError(true);
@@ -826,7 +829,7 @@ const ArticleManagerStudent = () => {
                                 }
                             >
                                 {/* Render options for faculties */}
-                                {academicFinal.map((academic) => (
+                                {academics.map((academic) => (
                                     <Option
                                         key={academic._id}
                                         value={academic._id}

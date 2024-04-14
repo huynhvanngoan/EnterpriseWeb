@@ -67,383 +67,38 @@ const ArticleManagerStudent = () => {
     const [articleDetail, setArticleDetail] = useState(null);
     const [agreeTermsModalVisible, setAgreeTermsModalVisible] = useState(false);
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
-    const [shouldFetch, setShouldFetch] = useState(true);
-    const [academicFinal, setAcademicFinal] = useState([]);
-    const handleAgreeTermsChange = (e) => {
-        setIsCheckboxChecked(e.target.checked);
-        if (e.target.checked) {
-            setAgreeTermsModalVisible(true); // Open ModalTerms when checkbox is checked
+    useEffect(() => {
+        if (shouldFetch) {
+            (async () => {
+                try {
+                    const user = JSON.parse(localStorage.getItem("user"));
+                    console.log(user._id);
+                    await articleApi.getArticleByUserId(user._id).then((res) => {
+                        console.log(res);
+                        setCategory(res.data);
+                        console.log(category);
+                        setLoading(false);
+                    });
+                } catch (error) {
+                    console.log("Failed to fetch category list:" + error);
+                }
+            })();
+            setShouldFetch(false);
         }
-    };
 
-    const showModal = () => {
-        setopenModalCreate(true);
-    };
-
-    const fetchArticleDetail = async (articleId) => {
-        try {
-            const response = await articleApi.getById(articleId);
-            setArticleDetail(response.data);
-            console.log(response.data);
-        } catch (error) {
-            console.error("Failed to fetch article detail:", error);
-        }
-    };
-
-    const handleOpenDetailModal = async (articleId) => {
-        await fetchArticleDetail(articleId);
-        setCommentModalVisible(true);
-    };
-
-    const handleSendComment = async () => {
-        setLoading(true);
-        try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            const values = await form.validateFields();
-            const comment = {
-                userId: user._id,
-                articleId: articleDetail._id,
-                description: values.comment,
-            };
-            const submitDate = moment(articleDetail.submitDate);
-            const currentDate = moment();
-            const daysDiff = currentDate.diff(submitDate, "days");
-            if (daysDiff > 14) {
-                // Nếu khoảng cách lớn hơn 14 ngày, không gửi request và thông báo cho người dùng
-                notification.warning({
-                    message: "Notification",
-                    description:
-                        "Cannot send comment for articles submitted more than 14 days ago.",
-                });
-                setLoading(false);
-                return;
-            }
-            const response = await commentApi.create(comment);
-            if (response) {
-                notification.success({
-                    message: "Notification",
-                    description: "Comment sent successfully",
-                });
-                form.resetFields();
-                setArticleDetail(null);
-            }
-        } catch (error) {
-            console.error("Failed to send comment:", error);
-            notification.error({
-                message: "Error",
-                description: "Failed to send comment",
-            });
-        }
-        setLoading(false);
-    };
-
-    const formatDate = (submitDate) => {
-        const date = new Date(submitDate);
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-        const formattedDate = `${day < 10 ? "0" + day : day}/${
-            month < 10 ? "0" + month : month
-        }/${year}`;
-        return formattedDate;
-    };
-
-    const handleDownloadArticle = async (articleId) => {
-        try {
-            window.open(
-                `http://localhost:8080/api/article/downloadbyid/${articleId}`
-            );
-        } catch (error) {
-            console.error("Failed to download article:", error);
-            notification.error({
-                message: "Error",
-                description: "Failed to download article",
-            });
-        }
-    };
-
-    const showEditModal = (id) => {
-        setOpenModalEdit(true);
-        (async () => {
+        const fetchAcademics = async () => {
             try {
-                const response = await articleApi.getById(id);
-                setId(id);
-                form2.setFieldsValue({
-                    title: response.data.title,
-                    content: response.data.content,
-                });
-                console.log(form2);
-                setLoading(false);
+                const response = await academicApi.listAcademic();
+                setAcademics(response.data);
+                const filteredAcademics = response.data.filter(
+                    (academic) => new Date(academic.finalClosureDate) >= Date.now()
+                );
+                setAcademics(filteredAcademics);
             } catch (error) {
-                throw error;
+                console.error("Failed to fetch academics:", error);
             }
-        })();
-    };
-
-    const handleEditOk = async (values) => {
-        if (file && fileFormatError) {
-            notification.error({
-                message: "Error",
-                description: "Please select a valid file format.",
-            });
-            setLoading(false);
-            return;
-        }
-        setLoading(true);
-        try {
-            if (file) {
-                const formData = new FormData();
-                formData.append("file", file);
-                const fileResponse = await fetch(
-                    "http://localhost:8080/api/file/upload",
-                    {
-                        method: "POST",
-                        body: formData,
-                    }
-                );
-                const fileData = await fileResponse.json();
-                const filePath = fileData.file.path;
-
-                const updatedArticle = {
-                    ...editArticleData,
-                    title: values.title,
-                    content: values.content,
-                    file: filePath,
-                };
-
-                await articleApi.updateArticle(updatedArticle, id);
-            } else {
-                const updatedArticle = {
-                    ...editArticleData,
-                    title: values.title,
-                    content: values.content,
-                };
-
-                const response = await articleApi.updateArticle(
-                    updatedArticle,
-                    id
-                );
-                if (response.article) {
-                    notification.success({
-                        message: "Notification",
-                        description: "Article updated successfully",
-                    });
-                } else {
-                    notification.error({
-                        message: "Notification",
-                        description: "Article updated error",
-                    });
-                }
-            }
-            setOpenModalEdit(false);
-            setShouldFetch(true);
-        } catch (error) {
-            console.error("Failed to update article:", error);
-            notification.error({
-                message: "Error",
-                description: "Failed to update article",
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleOkUser = async (values) => {
-        if (!isCheckboxChecked) {
-            notification.error({
-                message: "Error",
-                description: "Please agree to the terms and conditions.",
-            });
-            return;
-        }
-        if (file && fileFormatError) {
-            notification.error({
-                message: "Error",
-                description: "Please select a valid file format.",
-            });
-            setIsCheckboxChecked(false);
-            return;
-        }
-        setLoading(true);
-        try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            const formData = new FormData();
-            formData.append("file", file);
-            const fileResponse = await fetch(
-                "http://localhost:8080/api/file/upload",
-                {
-                    method: "POST",
-                    body: formData,
-                }
-            );
-            const fileData = await fileResponse.json();
-
-            if (fileData && fileData.file && fileData.file.path) {
-                const filePath = fileData.file.path;
-
-                const formData2 = new FormData();
-                formData2.append("file", image);
-                const fileResponse2 = await fetch(
-                    "http://localhost:8080/api/file/upload",
-                    {
-                        method: "POST",
-                        body: formData2,
-                    }
-                );
-                const imageData = await fileResponse2.json();
-
-                if (imageData && imageData.file && imageData.file.path) {
-                    const imagePath =
-                        `http://localhost:8080/` + imageData.file.path;
-                    const article = {
-                        title: values.title,
-                        content: values.content,
-                        userId: user._id,
-                        academicyearId: values.academic,
-                        image: imagePath,
-                        file: filePath,
-                    };
-
-                    await articleApi.createArticle(article).then((response) => {
-                        if (response === undefined) {
-                            notification["error"]({
-                                message: `Notification`,
-                                description: "Create Academic failure",
-                            });
-                        } else {
-                            notification["success"]({
-                                message: `Notification`,
-                                description: "Article submit successful",
-                            });
-                            setopenModalCreate(false);
-                            setShouldFetch(true);
-                            setIsCheckboxChecked(false);
-                        }
-                    });
-                } else {
-                    notification["error"]({
-                        message: "Error",
-                        description: "Failed to upload image",
-                    });
-                }
-            } else {
-                notification["error"]({
-                    message: "Error",
-                    description: "Failed to upload file",
-                });
-                setIsCheckboxChecked(false);
-            }
-        } catch (error) {
-            console.error("Failed to create article:", error);
-            notification.error({
-                message: "Error",
-                description: "Failed to create article",
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleCancel = (type) => {
-        if (type === "create") {
-            setopenModalCreate(false);
-        } else {
-            setOpenModalEdit(false);
-        }
-        console.log("Clicked cancel button");
-    };
-
-    const handleCategoryList = async () => {
-        setShouldFetch(true);
-        try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            await articleApi.getArticleByUserId(user._id).then((res) => {
-                setCategory(res.data);
-                setLoading(false);
-            });
-        } catch (error) {
-            console.log("Failed to fetch event list:" + error);
-        }
-    };
-
-    const handleDeleteArticle = async (id) => {
-        setLoading(true);
-        try {
-            await articleApi.deleteArticle(id).then((response) => {
-                if (
-                    response.message ===
-                    "Cannot delete the asset because it is referenced in another process or event."
-                ) {
-                    notification["error"]({
-                        message: `Notifation`,
-                        description:
-                            "Cannot be deleted because it is already in use in another event or process.",
-                    });
-                    setLoading(false);
-                    return;
-                }
-                if (response === undefined) {
-                    notification["error"]({
-                        message: `Notification`,
-                        description: "Failed",
-                    });
-                    setLoading(false);
-                } else {
-                    notification["success"]({
-                        message: `Notification`,
-                        description: "Delete Successfully",
-                    });
-                    setShouldFetch(true);
-                    setLoading(false);
-                }
-            });
-        } catch (error) {
-            console.log("Failed to fetch event list:" + error);
-        }
-    };
-
-    const handleFilter = async (name) => {
-        try {
-            const res = await articleApi.searchArticle(name);
-            setCategory(res.data);
-        } catch (error) {
-            console.log("search to fetch category list:" + error);
-        }
-    };
-
-    const handleFileChange = (e, type) => {
-        const file = e.target.files[0];
-        if (file) {
-            let validFormats = [];
-            if (type === "image") {
-                validFormats = ["image/jpeg", "image/png"];
-            } else if (type === "file") {
-                validFormats = [
-                    "application/msword",
-                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                ];
-            }
-
-            if (validFormats.includes(file.type)) {
-                setFileFormatError(false);
-                if (type === "image") {
-                    setImage(file);
-                } else if (type === "file") {
-                    setFile(file);
-                }
-            } else {
-                setFileFormatError(true);
-                notification.error({
-                    message: "Error",
-                    description:
-                        type === "image"
-                            ? "Please select a valid image file (.jpg, .png)."
-                            : "Please select a .doc file.",
-                });
-            }
-        }
-    };
-    console.log("check Academic Year", academics);
+        };
+        fetchAcademics();
 
     const columns = [
         {
@@ -461,10 +116,7 @@ const ArticleManagerStudent = () => {
             dataIndex: "image",
             key: "image",
             render: (text) => (
-                <img
-                    style={{ width: "150px", height: "150px" }}
-                    src={text}
-                ></img>
+                <img style={{ width: "150px", height: "150px" }} src={text}></img>
             ),
         },
         {
@@ -515,100 +167,80 @@ const ArticleManagerStudent = () => {
         {
             title: "Action",
             key: "action",
-            render: (text, record) => {
-                const currentAcademic = academics.find(
-                    (academic) => academic._id === record.academicyearId
-                );
-                const isFinalClosureDatePassed =
-                    currentAcademic &&
-                    new Date(currentAcademic.finalClosureDate) < Date.now();
-                return (
-                    <div>
-                        <Row>
-                            <div style={{ marginLeft: 10 }}>
-                                <Button
-                                    size="small"
-                                    icon={<EyeOutlined />}
-                                    style={{
-                                        width: 150,
-                                        borderRadius: 15,
-                                        height: 30,
-                                        marginBottom: 15,
-                                    }}
-                                    onClick={() =>
-                                        handleOpenDetailModal(record._id)
-                                    }
-                                >
-                                    {"Detail"}
-                                </Button>
-
-                                {!isFinalClosureDatePassed && (
-                                    <>
+            render: (text, record) => (
+                <div>
+                    <Row>
+                        <div style={{ marginLeft: 10 }}>
+                            <Button
+                                size="small"
+                                icon={<EyeOutlined />}
+                                style={{
+                                    width: 150,
+                                    borderRadius: 15,
+                                    height: 30,
+                                    marginBottom: 15,
+                                }}
+                                onClick={() => handleOpenDetailModal(record._id)}
+                            >
+                                {"Detail"}
+                            </Button>
+                            {!isFinalClosureBeforeNow(record.finalClosureDate) && ( // Kiểm tra nếu finalClosureDate không trước thời điểm hiện tại
+                                <>
+                                    <Button
+                                        onClick={() => showEditModal(record._id)}
+                                        icon={<EditOutlined />}
+                                        style={{
+                                            width: 150,
+                                            borderRadius: 15,
+                                            height: 30,
+                                            marginBottom: 15,
+                                        }}
+                                    >
+                                        Edit
+                                    </Button>
+                                    <Popconfirm
+                                        title="Are you sure to delete this article?"
+                                        onConfirm={() => handleDeleteArticle(record._id)}
+                                        okText="Yes"
+                                        cancelText="No"
+                                    >
                                         <Button
-                                            onClick={() =>
-                                                showEditModal(record._id)
-                                            }
-                                            icon={<EditOutlined />}
+                                            size="small"
+                                            icon={<DeleteOutlined />}
                                             style={{
                                                 width: 150,
                                                 borderRadius: 15,
                                                 height: 30,
-                                                marginBottom: 15,
                                             }}
                                         >
-                                            Edit
+                                            {"Delete"}
                                         </Button>
-                                        <Popconfirm
-                                            title="Are you sure to delete this article?"
-                                            onConfirm={() =>
-                                                handleDeleteArticle(record._id)
-                                            }
-                                            okText="Yes"
-                                            cancelText="No"
-                                        >
-                                            <Button
-                                                size="small"
-                                                icon={<DeleteOutlined />}
-                                                style={{
-                                                    width: 150,
-                                                    borderRadius: 15,
-                                                    height: 30,
-                                                }}
-                                            >
-                                                {"Delete"}
-                                            </Button>
-                                        </Popconfirm>
-                                    </>
-                                )}
-                            </div>
-                        </Row>
-                    </div>
-                );
-            },
+                                    </Popconfirm>
+                                </>
+                            )}
+
+                        </div>
+                    </Row>
+                </div>
+            ),
         },
     ];
 
     useEffect(() => {
-        if (shouldFetch) {
-            (async () => {
-                try {
-                    const user = JSON.parse(localStorage.getItem("user"));
-                    console.log(user._id);
-                    await articleApi
-                        .getArticleByUserId(user._id)
-                        .then((res) => {
-                            console.log(res);
-                            setCategory(res.data);
-                            console.log(category);
-                            setLoading(false);
-                        });
-                } catch (error) {
-                    console.log("Failed to fetch category list:" + error);
-                }
-            })();
-            setShouldFetch(false);
-        }
-
+        (async () => {
+            try {
+                const user = JSON.parse(localStorage.getItem("user"));
+                console.log(user._id);
+                await articleApi.getArticleByUserId(user._id).then((res) => {
+                    console.log(res);
+                    setCategory(res.data);
+                    console.log(category);
+                    setLoading(false);
+                });
+            } catch (error) {
+                console.log("Failed to fetch category list:" + error);
+            }
+        })();
         const fetchAcademics = async () => {
             try {
                 const response = await academicApi.listAcademic();
@@ -617,12 +249,11 @@ const ArticleManagerStudent = () => {
                     (academic) =>
                         new Date(academic.finalClosureDate) >= Date.now()
                 );
-                setAcademicFinal(filteredAcademics);
+                setAcademics(filteredAcademics);
             } catch (error) {
                 console.error("Failed to fetch academics:", error);
             }
         };
-
         fetchAcademics();
         const userAgent = navigator.userAgent;
         const logData = async () => {
@@ -662,7 +293,8 @@ const ArticleManagerStudent = () => {
             }
         };
         logData();
-    }, [category, shouldFetch]);
+    }, [category]);
+    console.log("academic Year", academics);
     return (
         <div>
             <Spin spinning={loading}>
@@ -826,7 +458,7 @@ const ArticleManagerStudent = () => {
                                 }
                             >
                                 {/* Render options for faculties */}
-                                {academicFinal.map((academic) => (
+                                {academics.map((academic) => (
                                     <Option
                                         key={academic._id}
                                         value={academic._id}

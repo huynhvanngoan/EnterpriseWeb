@@ -68,13 +68,13 @@ const ArticleManagerStudent = () => {
     const [agreeTermsModalVisible, setAgreeTermsModalVisible] = useState(false);
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
     const [shouldFetch, setShouldFetch] = useState(true);
-    const [academicFinal, setAcademicFinal] = useState([]);
+
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
             setAgreeTermsModalVisible(true); // Open ModalTerms when checkbox is checked
         }
-    };
+    }
 
     const showModal = () => {
         setopenModalCreate(true);
@@ -142,17 +142,13 @@ const ArticleManagerStudent = () => {
         const day = date.getDate();
         const month = date.getMonth() + 1;
         const year = date.getFullYear();
-        const formattedDate = `${day < 10 ? "0" + day : day}/${
-            month < 10 ? "0" + month : month
-        }/${year}`;
+        const formattedDate = `${day < 10 ? "0" + day : day}/${month < 10 ? "0" + month : month}/${year}`;
         return formattedDate;
     };
 
     const handleDownloadArticle = async (articleId) => {
         try {
-            window.open(
-                `http://localhost:8080/api/article/downloadbyid/${articleId}`
-            );
+            window.open(`http://localhost:8080/api/article/downloadbyid/${articleId}`);
         } catch (error) {
             console.error("Failed to download article:", error);
             notification.error({
@@ -194,13 +190,10 @@ const ArticleManagerStudent = () => {
             if (file) {
                 const formData = new FormData();
                 formData.append("file", file);
-                const fileResponse = await fetch(
-                    "http://localhost:8080/api/file/upload",
-                    {
-                        method: "POST",
-                        body: formData,
-                    }
-                );
+                const fileResponse = await fetch("http://localhost:8080/api/file/upload", {
+                    method: "POST",
+                    body: formData,
+                });
                 const fileData = await fileResponse.json();
                 const filePath = fileData.file.path;
 
@@ -219,10 +212,7 @@ const ArticleManagerStudent = () => {
                     content: values.content,
                 };
 
-                const response = await articleApi.updateArticle(
-                    updatedArticle,
-                    id
-                );
+                const response = await articleApi.updateArticle(updatedArticle, id);
                 if (response.article) {
                     notification.success({
                         message: "Notification",
@@ -269,13 +259,10 @@ const ArticleManagerStudent = () => {
             const user = JSON.parse(localStorage.getItem("user"));
             const formData = new FormData();
             formData.append("file", file);
-            const fileResponse = await fetch(
-                "http://localhost:8080/api/file/upload",
-                {
-                    method: "POST",
-                    body: formData,
-                }
-            );
+            const fileResponse = await fetch("http://localhost:8080/api/file/upload", {
+                method: "POST",
+                body: formData,
+            });
             const fileData = await fileResponse.json();
 
             if (fileData && fileData.file && fileData.file.path) {
@@ -283,18 +270,14 @@ const ArticleManagerStudent = () => {
 
                 const formData2 = new FormData();
                 formData2.append("file", image);
-                const fileResponse2 = await fetch(
-                    "http://localhost:8080/api/file/upload",
-                    {
-                        method: "POST",
-                        body: formData2,
-                    }
-                );
+                const fileResponse2 = await fetch("http://localhost:8080/api/file/upload", {
+                    method: "POST",
+                    body: formData2,
+                });
                 const imageData = await fileResponse2.json();
 
                 if (imageData && imageData.file && imageData.file.path) {
-                    const imagePath =
-                        `http://localhost:8080/` + imageData.file.path;
+                    const imagePath = `http://localhost:8080/` + imageData.file.path;
                     const article = {
                         title: values.title,
                         content: values.content,
@@ -370,14 +353,10 @@ const ArticleManagerStudent = () => {
         setLoading(true);
         try {
             await articleApi.deleteArticle(id).then((response) => {
-                if (
-                    response.message ===
-                    "Cannot delete the asset because it is referenced in another process or event."
-                ) {
+                if (response.message === "Cannot delete the asset because it is referenced in another process or event.") {
                     notification["error"]({
                         message: `Notifation`,
-                        description:
-                            "Cannot be deleted because it is already in use in another event or process.",
+                        description: "Cannot be deleted because it is already in use in another event or process.",
                     });
                     setLoading(false);
                     return;
@@ -443,7 +422,10 @@ const ArticleManagerStudent = () => {
             }
         }
     };
-    console.log("check Academic Year", academics);
+
+    const isFinalClosureBeforeNow = (finalClosureDate) => {
+        return moment(finalClosureDate).isBefore(moment());
+    };
 
     const columns = [
         {
@@ -461,10 +443,7 @@ const ArticleManagerStudent = () => {
             dataIndex: "image",
             key: "image",
             render: (text) => (
-                <img
-                    style={{ width: "150px", height: "150px" }}
-                    src={text}
-                ></img>
+                <img style={{ width: "150px", height: "150px" }} src={text}></img>
             ),
         },
         {
@@ -515,100 +494,80 @@ const ArticleManagerStudent = () => {
         {
             title: "Action",
             key: "action",
-            render: (text, record) => {
-                const currentAcademic = academics.find(
-                    (academic) => academic._id === record.academicyearId
-                );
-                const isFinalClosureDatePassed =
-                    currentAcademic &&
-                    new Date(currentAcademic.finalClosureDate) < Date.now();
-                return (
-                    <div>
-                        <Row>
-                            <div style={{ marginLeft: 10 }}>
-                                <Button
-                                    size="small"
-                                    icon={<EyeOutlined />}
-                                    style={{
-                                        width: 150,
-                                        borderRadius: 15,
-                                        height: 30,
-                                        marginBottom: 15,
-                                    }}
-                                    onClick={() =>
-                                        handleOpenDetailModal(record._id)
-                                    }
-                                >
-                                    {"Detail"}
-                                </Button>
-
-                                {!isFinalClosureDatePassed && (
-                                    <>
+            render: (text, record) => (
+                <div>
+                    <Row>
+                        <div style={{ marginLeft: 10 }}>
+                            <Button
+                                size="small"
+                                icon={<EyeOutlined />}
+                                style={{
+                                    width: 150,
+                                    borderRadius: 15,
+                                    height: 30,
+                                    marginBottom: 15,
+                                }}
+                                onClick={() => handleOpenDetailModal(record._id)}
+                            >
+                                {"Detail"}
+                            </Button>
+                            {!isFinalClosureBeforeNow(record.finalClosureDate) && ( // Kiểm tra nếu finalClosureDate không trước thời điểm hiện tại
+                                <>
+                                    <Button
+                                        onClick={() => showEditModal(record._id)}
+                                        icon={<EditOutlined />}
+                                        style={{
+                                            width: 150,
+                                            borderRadius: 15,
+                                            height: 30,
+                                            marginBottom: 15,
+                                        }}
+                                    >
+                                        Edit
+                                    </Button>
+                                    <Popconfirm
+                                        title="Are you sure to delete this article?"
+                                        onConfirm={() => handleDeleteArticle(record._id)}
+                                        okText="Yes"
+                                        cancelText="No"
+                                    >
                                         <Button
-                                            onClick={() =>
-                                                showEditModal(record._id)
-                                            }
-                                            icon={<EditOutlined />}
+                                            size="small"
+                                            icon={<DeleteOutlined />}
                                             style={{
                                                 width: 150,
                                                 borderRadius: 15,
                                                 height: 30,
-                                                marginBottom: 15,
                                             }}
                                         >
-                                            Edit
+                                            {"Delete"}
                                         </Button>
-                                        <Popconfirm
-                                            title="Are you sure to delete this article?"
-                                            onConfirm={() =>
-                                                handleDeleteArticle(record._id)
-                                            }
-                                            okText="Yes"
-                                            cancelText="No"
-                                        >
-                                            <Button
-                                                size="small"
-                                                icon={<DeleteOutlined />}
-                                                style={{
-                                                    width: 150,
-                                                    borderRadius: 15,
-                                                    height: 30,
-                                                }}
-                                            >
-                                                {"Delete"}
-                                            </Button>
-                                        </Popconfirm>
-                                    </>
-                                )}
-                            </div>
-                        </Row>
-                    </div>
-                );
-            },
+                                    </Popconfirm>
+                                </>
+                            )}
+
+                        </div>
+                    </Row>
+                </div>
+            ),
         },
     ];
 
     useEffect(() => {
-        if (shouldFetch) {
-            (async () => {
-                try {
-                    const user = JSON.parse(localStorage.getItem("user"));
-                    console.log(user._id);
-                    await articleApi
-                        .getArticleByUserId(user._id)
-                        .then((res) => {
-                            console.log(res);
-                            setCategory(res.data);
-                            console.log(category);
-                            setLoading(false);
-                        });
-                } catch (error) {
-                    console.log("Failed to fetch category list:" + error);
-                }
-            })();
-            setShouldFetch(false);
-        }
-
+        (async () => {
+            try {
+                const user = JSON.parse(localStorage.getItem("user"));
+                console.log(user._id);
+                await articleApi.getArticleByUserId(user._id).then((res) => {
+                    console.log(res);
+                    setCategory(res.data);
+                    console.log(category);
+                    setLoading(false);
+                });
+            } catch (error) {
+                console.log("Failed to fetch category list:" + error);
+            }
+        })();
         const fetchAcademics = async () => {
             try {
                 const response = await academicApi.listAcademic();
@@ -617,12 +576,11 @@ const ArticleManagerStudent = () => {
                     (academic) =>
                         new Date(academic.finalClosureDate) >= Date.now()
                 );
-                setAcademicFinal(filteredAcademics);
+                setAcademics(filteredAcademics);
             } catch (error) {
                 console.error("Failed to fetch academics:", error);
             }
         };
-
         fetchAcademics();
         const userAgent = navigator.userAgent;
         const logData = async () => {
@@ -662,7 +620,8 @@ const ArticleManagerStudent = () => {
             }
         };
         logData();
-    }, [category, shouldFetch]);
+    }, [category]);
+    console.log("academic Year", academics);
     return (
         <div>
             <Spin spinning={loading}>
@@ -826,7 +785,7 @@ const ArticleManagerStudent = () => {
                                 }
                             >
                                 {/* Render options for faculties */}
-                                {academicFinal.map((academic) => (
+                                {academics.map((academic) => (
                                     <Option
                                         key={academic._id}
                                         value={academic._id}

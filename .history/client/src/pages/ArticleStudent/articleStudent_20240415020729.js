@@ -61,6 +61,8 @@ const ArticleManagerStudent = () => {
     const [agreeTerms, setAgreeTerms] = useState(false);
     const [academics, setAcademics] = useState([]);
     const history = useHistory();
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(null);
     const [fileFormatError, setFileFormatError] = useState(false);
     const [showExample, setShowExample] = useState(false);
     const [commentModalVisible, setCommentModalVisible] = useState(false);
@@ -68,7 +70,8 @@ const ArticleManagerStudent = () => {
     const [agreeTermsModalVisible, setAgreeTermsModalVisible] = useState(false);
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
     const [shouldFetch, setShouldFetch] = useState(true);
-    const [academicFinal, setAcademicFinal] = useState([]);
+    const [academicFinal, setAcademicFinal] = useState();
+
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
@@ -428,6 +431,7 @@ const ArticleManagerStudent = () => {
                 setFileFormatError(false);
                 if (type === "image") {
                     setImage(file);
+                    setSelectedImage(file);
                 } else if (type === "file") {
                     setFile(file);
                 }
@@ -826,7 +830,7 @@ const ArticleManagerStudent = () => {
                                 }
                             >
                                 {/* Render options for faculties */}
-                                {academicFinal.map((academic) => (
+                                {academics.map((academic) => (
                                     <Option
                                         key={academic._id}
                                         value={academic._id}

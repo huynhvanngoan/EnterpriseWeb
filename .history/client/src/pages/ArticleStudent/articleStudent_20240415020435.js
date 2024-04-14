@@ -68,7 +68,7 @@ const ArticleManagerStudent = () => {
     const [agreeTermsModalVisible, setAgreeTermsModalVisible] = useState(false);
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
     const [shouldFetch, setShouldFetch] = useState(true);
-    const [academicFinal, setAcademicFinal] = useState([]);
+    const [academicFinal, setAcademicFinal] = useState();
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
@@ -280,7 +280,7 @@ const ArticleManagerStudent = () => {
 
             if (fileData && fileData.file && fileData.file.path) {
                 const filePath = fileData.file.path;
-
+ setFile(file);
                 const formData2 = new FormData();
                 formData2.append("file", image);
                 const fileResponse2 = await fetch(
@@ -826,7 +826,7 @@ const ArticleManagerStudent = () => {
                                 }
                             >
                                 {/* Render options for faculties */}
-                                {academicFinal.map((academic) => (
+                                {academics.map((academic) => (
                                     <Option
                                         key={academic._id}
                                         value={academic._id}

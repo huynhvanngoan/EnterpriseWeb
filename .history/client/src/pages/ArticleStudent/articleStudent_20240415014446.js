@@ -67,15 +67,14 @@ const ArticleManagerStudent = () => {
     const [articleDetail, setArticleDetail] = useState(null);
     const [agreeTermsModalVisible, setAgreeTermsModalVisible] = useState(false);
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
-    const [shouldFetch, setShouldFetch] = useState(true);
-    const [academicFinal, setAcademicFinal] = useState([]);
+
+
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
             setAgreeTermsModalVisible(true); // Open ModalTerms when checkbox is checked
         }
-    };
-
+    }
     const showModal = () => {
         setopenModalCreate(true);
     };
@@ -89,12 +88,10 @@ const ArticleManagerStudent = () => {
             console.error("Failed to fetch article detail:", error);
         }
     };
-
     const handleOpenDetailModal = async (articleId) => {
         await fetchArticleDetail(articleId);
         setCommentModalVisible(true);
     };
-
     const handleSendComment = async () => {
         setLoading(true);
         try {
@@ -136,18 +133,21 @@ const ArticleManagerStudent = () => {
         }
         setLoading(false);
     };
-
     const formatDate = (submitDate) => {
+        // Chuyển đổi submitDate thành đối tượng Date
         const date = new Date(submitDate);
+
+        // Lấy ngày, tháng, năm từ đối tượng Date
         const day = date.getDate();
-        const month = date.getMonth() + 1;
+        const month = date.getMonth() + 1; // Lưu ý: tháng trong JavaScript bắt đầu từ 0
         const year = date.getFullYear();
-        const formattedDate = `${day < 10 ? "0" + day : day}/${
-            month < 10 ? "0" + month : month
-        }/${year}`;
+
+        // Định dạng lại thành dd/mm/yyyy
+        const formattedDate = `${day < 10 ? "0" + day : day}/${month < 10 ? "0" + month : month
+            }/${year}`;
+
         return formattedDate;
     };
-
     const handleDownloadArticle = async (articleId) => {
         try {
             window.open(
@@ -161,12 +161,12 @@ const ArticleManagerStudent = () => {
             });
         }
     };
-
     const showEditModal = (id) => {
+        // Đặt giá trị mặc định cho form chỉnh sửa
         setOpenModalEdit(true);
         (async () => {
             try {
-                const response = await articleApi.getById(id);
+                const response = await ariticle.getById(id);
                 setId(id);
                 form2.setFieldsValue({
                     title: response.data.title,
@@ -179,7 +179,6 @@ const ArticleManagerStudent = () => {
             }
         })();
     };
-
     const handleEditOk = async (values) => {
         if (file && fileFormatError) {
             notification.error({
@@ -187,11 +186,14 @@ const ArticleManagerStudent = () => {
                 description: "Please select a valid file format.",
             });
             setLoading(false);
+
             return;
         }
         setLoading(true);
         try {
+            // Kiểm tra xem người dùng đã chọn file mới hay không
             if (file) {
+                // Nếu người dùng đã chọn file mới, tiến hành tải lên file mới
                 const formData = new FormData();
                 formData.append("file", file);
                 const fileResponse = await fetch(
@@ -204,6 +206,7 @@ const ArticleManagerStudent = () => {
                 const fileData = await fileResponse.json();
                 const filePath = fileData.file.path;
 
+                // Cập nhật thông tin mới của bài viết, bao gồm đường dẫn của file mới
                 const updatedArticle = {
                     ...editArticleData,
                     title: values.title,
@@ -211,14 +214,17 @@ const ArticleManagerStudent = () => {
                     file: filePath,
                 };
 
+                // Gọi API để cập nhật bài viết với thông tin mới
                 await articleApi.updateArticle(updatedArticle, id);
             } else {
+                // Nếu người dùng không chọn file mới, chỉ cập nhật thông tin của bài viết
                 const updatedArticle = {
                     ...editArticleData,
                     title: values.title,
                     content: values.content,
                 };
 
+                // Gọi API để cập nhật bài viết chỉ với thông tin mới
                 const response = await articleApi.updateArticle(
                     updatedArticle,
                     id
@@ -236,7 +242,7 @@ const ArticleManagerStudent = () => {
                 }
             }
             setOpenModalEdit(false);
-            setShouldFetch(true);
+            handleCategoryList();
         } catch (error) {
             console.error("Failed to update article:", error);
             notification.error({
@@ -247,9 +253,9 @@ const ArticleManagerStudent = () => {
             setLoading(false);
         }
     };
-
     const handleOkUser = async (values) => {
         if (!isCheckboxChecked) {
+            // Notify the user to agree to terms
             notification.error({
                 message: "Error",
                 description: "Please agree to the terms and conditions.",
@@ -316,7 +322,7 @@ const ArticleManagerStudent = () => {
                                 description: "Article submit successful",
                             });
                             setopenModalCreate(false);
-                            setShouldFetch(true);
+                            handleCategoryList();
                             setIsCheckboxChecked(false);
                         }
                     });
@@ -354,10 +360,9 @@ const ArticleManagerStudent = () => {
     };
 
     const handleCategoryList = async () => {
-        setShouldFetch(true);
         try {
             const user = JSON.parse(localStorage.getItem("user"));
-            await articleApi.getArticleByUserId(user._id).then((res) => {
+            await ariticle.getArticleByUserId(user._id).then((res) => {
                 setCategory(res.data);
                 setLoading(false);
             });
@@ -369,7 +374,7 @@ const ArticleManagerStudent = () => {
     const handleDeleteArticle = async (id) => {
         setLoading(true);
         try {
-            await articleApi.deleteArticle(id).then((response) => {
+            await ariticle.deleteArticle(id).then((response) => {
                 if (
                     response.message ===
                     "Cannot delete the asset because it is referenced in another process or event."
@@ -393,7 +398,7 @@ const ArticleManagerStudent = () => {
                         message: `Notification`,
                         description: "Delete Successfully",
                     });
-                    setShouldFetch(true);
+                    handleCategoryList();
                     setLoading(false);
                 }
             });
@@ -404,26 +409,28 @@ const ArticleManagerStudent = () => {
 
     const handleFilter = async (name) => {
         try {
-            const res = await articleApi.searchArticle(name);
+            const res = await assetCategoryApi.searchAssetCategory(name);
             setCategory(res.data);
         } catch (error) {
             console.log("search to fetch category list:" + error);
         }
     };
-
     const handleFileChange = (e, type) => {
         const file = e.target.files[0];
         if (file) {
             let validFormats = [];
             if (type === "image") {
+                // Kiểm tra định dạng của file ảnh (image)
                 validFormats = ["image/jpeg", "image/png"];
             } else if (type === "file") {
+                // Kiểm tra định dạng của file (.doc)
                 validFormats = [
                     "application/msword",
                     "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
                 ];
             }
 
+            // Kiểm tra xem file có nằm trong danh sách định dạng hợp lệ không
             if (validFormats.includes(file.type)) {
                 setFileFormatError(false);
                 if (type === "image") {
@@ -433,6 +440,7 @@ const ArticleManagerStudent = () => {
                 }
             } else {
                 setFileFormatError(true);
+                // Hiển thị thông báo nếu file không đúng định dạng
                 notification.error({
                     message: "Error",
                     description:
@@ -443,7 +451,10 @@ const ArticleManagerStudent = () => {
             }
         }
     };
-    console.log("check Academic Year", academics);
+
+    const isFinalClosureBeforeNow = (finalClosureDate) => {
+        return moment(finalClosureDate).isBefore(moment());
+    };
 
     const columns = [
         {
@@ -461,10 +472,7 @@ const ArticleManagerStudent = () => {
             dataIndex: "image",
             key: "image",
             render: (text) => (
-                <img
-                    style={{ width: "150px", height: "150px" }}
-                    src={text}
-                ></img>
+                <img style={{ width: "150px", height: "150px" }} src={text}></img>
             ),
         },
         {
@@ -515,100 +523,80 @@ const ArticleManagerStudent = () => {
         {
             title: "Action",
             key: "action",
-            render: (text, record) => {
-                const currentAcademic = academics.find(
-                    (academic) => academic._id === record.academicyearId
-                );
-                const isFinalClosureDatePassed =
-                    currentAcademic &&
-                    new Date(currentAcademic.finalClosureDate) < Date.now();
-                return (
-                    <div>
-                        <Row>
-                            <div style={{ marginLeft: 10 }}>
-                                <Button
-                                    size="small"
-                                    icon={<EyeOutlined />}
-                                    style={{
-                                        width: 150,
-                                        borderRadius: 15,
-                                        height: 30,
-                                        marginBottom: 15,
-                                    }}
-                                    onClick={() =>
-                                        handleOpenDetailModal(record._id)
-                                    }
-                                >
-                                    {"Detail"}
-                                </Button>
-
-                                {!isFinalClosureDatePassed && (
-                                    <>
+            render: (text, record) => (
+                <div>
+                    <Row>
+                        <div style={{ marginLeft: 10 }}>
+                            <Button
+                                size="small"
+                                icon={<EyeOutlined />}
+                                style={{
+                                    width: 150,
+                                    borderRadius: 15,
+                                    height: 30,
+                                    marginBottom: 15,
+                                }}
+                                onClick={() => handleOpenDetailModal(record._id)}
+                            >
+                                {"Detail"}
+                            </Button>
+                            {!isFinalClosureBeforeNow(record.finalClosureDate) && ( // Kiểm tra nếu finalClosureDate không trước thời điểm hiện tại
+                                <>
+                                    <Button
+                                        onClick={() => showEditModal(record._id)}
+                                        icon={<EditOutlined />}
+                                        style={{
+                                            width: 150,
+                                            borderRadius: 15,
+                                            height: 30,
+                                            marginBottom: 15,
+                                        }}
+                                    >
+                                        Edit
+                                    </Button>
+                                    <Popconfirm
+                                        title="Are you sure to delete this article?"
+                                        onConfirm={() => handleDeleteArticle(record._id)}
+                                        okText="Yes"
+                                        cancelText="No"
+                                    >
                                         <Button
-                                            onClick={() =>
-                                                showEditModal(record._id)
-                                            }
-                                            icon={<EditOutlined />}
+                                            size="small"
+                                            icon={<DeleteOutlined />}
                                             style={{
                                                 width: 150,
                                                 borderRadius: 15,
                                                 height: 30,
-                                                marginBottom: 15,
                                             }}
                                         >
-                                            Edit
+                                            {"Delete"}
                                         </Button>
-                                        <Popconfirm
-                                            title="Are you sure to delete this article?"
-                                            onConfirm={() =>
-                                                handleDeleteArticle(record._id)
-                                            }
-                                            okText="Yes"
-                                            cancelText="No"
-                                        >
-                                            <Button
-                                                size="small"
-                                                icon={<DeleteOutlined />}
-                                                style={{
-                                                    width: 150,
-                                                    borderRadius: 15,
-                                                    height: 30,
-                                                }}
-                                            >
-                                                {"Delete"}
-                                            </Button>
-                                        </Popconfirm>
-                                    </>
-                                )}
-                            </div>
-                        </Row>
-                    </div>
-                );
-            },
+                                    </Popconfirm>
+                                </>
+                            )}
+
+                        </div>
+                    </Row>
+                </div>
+            ),
         },
     ];
 
     useEffect(() => {
-        if (shouldFetch) {
-            (async () => {
-                try {
-                    const user = JSON.parse(localStorage.getItem("user"));
-                    console.log(user._id);
-                    await articleApi
-                        .getArticleByUserId(user._id)
-                        .then((res) => {
-                            console.log(res);
-                            setCategory(res.data);
-                            console.log(category);
-                            setLoading(false);
-                        });
-                } catch (error) {
-                    console.log("Failed to fetch category list:" + error);
-                }
-            })();
-            setShouldFetch(false);
-        }
-
+        (async () => {
+            try {
+                const user = JSON.parse(localStorage.getItem("user"));
+                console.log(user._id);
+                await articleApi.getArticleByUserId(user._id).then((res) => {
+                    console.log(res);
+                    setCategory(res.data);
+                    console.log(category);
+                    setLoading(false);
+                });
+            } catch (error) {
+                console.log("Failed to fetch category list:" + error);
+            }
+        })();
         const fetchAcademics = async () => {
             try {
                 const response = await academicApi.listAcademic();
@@ -617,12 +605,11 @@ const ArticleManagerStudent = () => {
                     (academic) =>
                         new Date(academic.finalClosureDate) >= Date.now()
                 );
-                setAcademicFinal(filteredAcademics);
+                setAcademics(filteredAcademics);
             } catch (error) {
                 console.error("Failed to fetch academics:", error);
             }
         };
-
         fetchAcademics();
         const userAgent = navigator.userAgent;
         const logData = async () => {
@@ -662,7 +649,8 @@ const ArticleManagerStudent = () => {
             }
         };
         logData();
-    }, [category, shouldFetch]);
+    }, [category]);
+    console.log("academic Year", academics);
     return (
         <div>
             <Spin spinning={loading}>
@@ -826,7 +814,7 @@ const ArticleManagerStudent = () => {
                                 }
                             >
                                 {/* Render options for faculties */}
-                                {academicFinal.map((academic) => (
+                                {academics.map((academic) => (
                                     <Option
                                         key={academic._id}
                                         value={academic._id}
