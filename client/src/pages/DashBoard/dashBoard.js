@@ -43,10 +43,11 @@ const COLORS = [
 const DashBoard = () => {
     const [loading, setLoading] = useState(true);
     const [articles, setArticles] = useState([]);
-    const [totalAcademicYears, setTotalAcademicYears] = useState(0);
+    const [totalAcademicYears, setTotalAcademicYears] = useState([]);
     const [totalByFaculty, setTotalFaculties] = useState(0);
     // const [totalUser, setTotalUser] = useState(0);
     // const [totalAritcle, setTotalAritcle] = useState(0);
+    const [articeFaculty, setArticleFaculty] = useState([]);
     const [totalByStatus, setTotalByStatus] = useState([]);
     const [totalByComment, setTotalByComments] = useState([]);
     // const [publicArticles, setPublicArticles] = useState([]);
@@ -54,6 +55,7 @@ const DashBoard = () => {
     const [role, setRole] = useState();
     const [urlStats, setUrlStats] = useState([]);
     const [browerData, setBrowerData] = useState([]);
+    const [contributor, setContributor] = useState([]);
 
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("user"));
@@ -78,48 +80,101 @@ const DashBoard = () => {
             try {
                 const user = JSON.parse(localStorage.getItem("user"));
                 const facultyId = user.facultyId;
-                const [
-                    academicResponse,
-                    facultyResponse,
-                    statusResponse,
-                    commentReponse,
-                    urlReponse,
-                    browerReponse,
-                ] = await Promise.all([
-                    dashBoardApi.getTotalByAcademic(facultyId),
-                    dashBoardApi.getTotalByFaculty(facultyId),
-                    dashBoardApi.getTotalByStatus(facultyId),
-                    dashBoardApi.getTotalByComment(facultyId),
+                const [urlReponse, browerReponse] = await Promise.all([
                     dashBoardApi.getTotalByUrl(),
                     dashBoardApi.getTotalByBrower(),
                 ]);
-                const academicData = academicResponse.data.map((item) => ({
-                    name: item.name,
-                    count: item.count,
-                }));
-                setTotalAcademicYears(academicData);
-                const privateData = [
-                    { name: "Public", count: facultyResponse.data.public },
-                    { name: "Private", count: facultyResponse.data.private },
-                ];
-                setTotalFaculties(privateData);
-                const statusData = [
-                    { name: "Pending", count: statusResponse.data.pending },
-                    { name: "Approved", count: statusResponse.data.approved },
-                    { name: "Rejected", count: statusResponse.data.rejected },
-                ];
-                setTotalByStatus(statusData);
-                const commentData = [
-                    {
-                        name: "No Comments",
-                        count: commentReponse.data.withoutComments,
-                    },
-                    {
-                        name: "Comment",
-                        count: commentReponse.data.withComments,
-                    },
-                ];
-                setTotalByComments(commentData);
+                if (facultyId !== undefined) {
+                    const [
+                        academicResponse,
+                        facultyResponse,
+                        statusResponse,
+                        commentReponse,
+                    ] = await Promise.all([
+                        dashBoardApi.getTotalByAcademic(facultyId),
+                        dashBoardApi.getTotalByFaculty(facultyId),
+                        dashBoardApi.getTotalByStatus(facultyId),
+                        dashBoardApi.getTotalByComment(facultyId),
+                    ]);
+                    const academicData = academicResponse.data.map((item) => ({
+                        name: item.name,
+                        count: item.count,
+                    }));
+                    setTotalAcademicYears(academicData);
+                    const privateData = [
+                        { name: "Public", count: facultyResponse.data.public },
+                        {
+                            name: "Private",
+                            count: facultyResponse.data.private,
+                        },
+                    ];
+                    setTotalFaculties(privateData);
+                    const statusData = [
+                        { name: "Pending", count: statusResponse.data.pending },
+                        {
+                            name: "Approved",
+                            count: statusResponse.data.approved,
+                        },
+                        {
+                            name: "Rejected",
+                            count: statusResponse.data.rejected,
+                        },
+                    ];
+                    setTotalByStatus(statusData);
+                    const commentData = [
+                        {
+                            name: "No Comments",
+                            count: commentReponse.data.withoutComments,
+                        },
+                        {
+                            name: "No Comment After 14 Days",
+                            count: commentReponse.data
+                                .withoutCommentsAfter14Days,
+                        },
+                        {
+                            name: "Comment",
+                            count: commentReponse.data.withComments,
+                        },
+                    ];
+                    setTotalByComments(commentData);
+                    setLoading(false);
+                } else {
+                    const [academicRes, facultyRes, statusRes, contributorRes] =
+                        await Promise.all([
+                            dashBoardApi.getArticleByAcademic(),
+                            dashBoardApi.getArticleByFaculty(),
+                            dashBoardApi.getArticleByStatus(),
+                            dashBoardApi.getContributor(),
+                        ]);
+                    const academicData = academicRes.data.map((item) => ({
+                        name: item.name,
+                        count: item.count,
+                    }));
+                    setTotalAcademicYears(academicData);
+                    const facultyData = facultyRes.data.map((item) => ({
+                        name: item.facultyName,
+                        count: item.totalArticles,
+                    }));
+                    setArticleFaculty(facultyData);
+                    const statusData = [
+                        { name: "Pending", count: statusRes.data.pending },
+                        {
+                            name: "Approved",
+                            count: statusRes.data.approved,
+                        },
+                        {
+                            name: "Rejected",
+                            count: statusRes.data.rejected,
+                        },
+                    ];
+                    setTotalByStatus(statusData);
+                    const contributorData = contributorRes.data.map((item) => ({
+                        name: item.facultyName,
+                        count: item.uniqueUsersWithArticlesCount,
+                    }));
+                    setContributor(contributorData);
+                    setLoading(false);
+                }
                 const urlData = urlReponse.data.map((item) => ({
                     name: item.name,
                     count: item.count,
@@ -130,7 +185,6 @@ const DashBoard = () => {
                     count: item.count,
                 }));
                 setBrowerData(browerData);
-                console.log(urlData);
                 setLoading(false);
             } catch (error) {
                 console.error("Failed to fetch data:", error);
@@ -199,13 +253,165 @@ const DashBoard = () => {
                     </div>
                     {role !== "student" && (
                         <>
-                            {role !== "admin" && (
+                            {role !== "admin" && role !== "department" && (
+                                <>
+                                    {role === "guest" ||
+                                        (role === "marketing" && (
+                                            <>
+                                                <Row gutter={12}>
+                                                    <Col span={24}>
+                                                        <h3>
+                                                            Chart By Academic
+                                                            Year With Faculty{" "}
+                                                        </h3>
+                                                        <ResponsiveContainer
+                                                            width="100%"
+                                                            height={300}
+                                                        >
+                                                            <BarChart
+                                                                data={
+                                                                    totalAcademicYears
+                                                                }
+                                                                margin={{
+                                                                    top: 20,
+                                                                    right: 30,
+                                                                    left: 20,
+                                                                    bottom: 5,
+                                                                }}
+                                                            >
+                                                                <CartesianGrid strokeDasharray="3 3" />
+                                                                <XAxis dataKey="name" />
+                                                                <YAxis />
+                                                                <Tooltip />
+                                                                <Legend />
+                                                                <Bar
+                                                                    dataKey="count"
+                                                                    fill={
+                                                                        COLORS[5]
+                                                                    }
+                                                                />
+                                                            </BarChart>
+                                                        </ResponsiveContainer>
+                                                    </Col>
+                                                </Row>
+                                                <Row gutter={12}>
+                                                    <Col span={24}>
+                                                        <h3>
+                                                            Chart By Prive With
+                                                            Faculty
+                                                        </h3>
+                                                        <ResponsiveContainer
+                                                            width="100%"
+                                                            height={300}
+                                                        >
+                                                            <BarChart
+                                                                data={
+                                                                    totalByFaculty
+                                                                }
+                                                                margin={{
+                                                                    top: 20,
+                                                                    right: 30,
+                                                                    left: 20,
+                                                                    bottom: 5,
+                                                                }}
+                                                            >
+                                                                <CartesianGrid strokeDasharray="3 3" />
+                                                                <XAxis dataKey="name" />
+                                                                <YAxis />
+                                                                <Tooltip />
+                                                                <Legend />
+                                                                <Bar
+                                                                    dataKey="count"
+                                                                    fill={
+                                                                        COLORS[3]
+                                                                    }
+                                                                />
+                                                            </BarChart>
+                                                        </ResponsiveContainer>
+                                                    </Col>
+                                                </Row>
+                                                <Row gutter={12}>
+                                                    <Col span={24}>
+                                                        <h3>
+                                                            Chart By Status With
+                                                            Faculty
+                                                        </h3>
+                                                        <ResponsiveContainer
+                                                            width="100%"
+                                                            height={300}
+                                                        >
+                                                            <BarChart
+                                                                data={
+                                                                    totalByStatus
+                                                                }
+                                                                margin={{
+                                                                    top: 20,
+                                                                    right: 30,
+                                                                    left: 20,
+                                                                    bottom: 5,
+                                                                }}
+                                                            >
+                                                                <CartesianGrid strokeDasharray="3 3" />
+                                                                <XAxis dataKey="name" />
+                                                                <YAxis />
+                                                                <Tooltip />
+                                                                <Legend />
+                                                                <Bar
+                                                                    dataKey="count"
+                                                                    fill={
+                                                                        COLORS[1]
+                                                                    }
+                                                                />
+                                                            </BarChart>
+                                                        </ResponsiveContainer>
+                                                    </Col>
+                                                </Row>
+                                                <Row gutter={12}>
+                                                    <Col span={24}>
+                                                        <h3>
+                                                            Chart By Comment
+                                                            With Faculty
+                                                        </h3>
+                                                        <ResponsiveContainer
+                                                            width="100%"
+                                                            height={300}
+                                                        >
+                                                            <BarChart
+                                                                data={
+                                                                    totalByComment
+                                                                }
+                                                                margin={{
+                                                                    top: 20,
+                                                                    right: 30,
+                                                                    left: 20,
+                                                                    bottom: 5,
+                                                                }}
+                                                            >
+                                                                <CartesianGrid strokeDasharray="3 3" />
+                                                                <XAxis dataKey="name" />
+                                                                <YAxis />
+                                                                <Tooltip />
+                                                                <Legend />
+                                                                <Bar
+                                                                    dataKey="count"
+                                                                    fill={
+                                                                        COLORS[0]
+                                                                    }
+                                                                />
+                                                            </BarChart>
+                                                        </ResponsiveContainer>
+                                                    </Col>
+                                                </Row>
+                                            </>
+                                        ))}
+                                </>
+                            )}
+                            {role === "department" && (
                                 <>
                                     <Row gutter={12}>
                                         <Col span={24}>
                                             <h3>
-                                                Chart By Academic Year With
-                                                Faculty{" "}
+                                                Chart Articles Of Academic Year{" "}
                                             </h3>
                                             <ResponsiveContainer
                                                 width="100%"
@@ -225,23 +431,34 @@ const DashBoard = () => {
                                                     <YAxis />
                                                     <Tooltip />
                                                     <Legend />
-                                                    <Bar
-                                                        dataKey="count"
-                                                        fill={COLORS[5]}
-                                                    />
+                                                    <Bar dataKey="count">
+                                                        {totalAcademicYears.map(
+                                                            (entry, index) => (
+                                                                <Cell
+                                                                    key={`cell-${index}`}
+                                                                    fill={
+                                                                        COLORS[
+                                                                        index %
+                                                                        COLORS.length
+                                                                        ]
+                                                                    }
+                                                                />
+                                                            )
+                                                        )}
+                                                    </Bar>
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </Col>
                                     </Row>
                                     <Row gutter={12}>
                                         <Col span={24}>
-                                            <h3>Chart By Prive With Faculty</h3>
+                                            <h3>Chart Articles Of Faculty </h3>
                                             <ResponsiveContainer
                                                 width="100%"
                                                 height={300}
                                             >
                                                 <BarChart
-                                                    data={totalByFaculty}
+                                                    data={articeFaculty}
                                                     margin={{
                                                         top: 20,
                                                         right: 30,
@@ -254,10 +471,21 @@ const DashBoard = () => {
                                                     <YAxis />
                                                     <Tooltip />
                                                     <Legend />
-                                                    <Bar
-                                                        dataKey="count"
-                                                        fill={COLORS[3]}
-                                                    />
+                                                    <Bar dataKey="count">
+                                                        {articeFaculty.map(
+                                                            (entry, index) => (
+                                                                <Cell
+                                                                    key={`cell-${index}`}
+                                                                    fill={
+                                                                        COLORS[
+                                                                        index %
+                                                                        COLORS.length
+                                                                        ]
+                                                                    }
+                                                                />
+                                                            )
+                                                        )}
+                                                    </Bar>
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </Col>
@@ -265,8 +493,49 @@ const DashBoard = () => {
                                     <Row gutter={12}>
                                         <Col span={24}>
                                             <h3>
-                                                Chart By Status With Faculty
+                                                Chart Contributor Has Article Of
+                                                Faculty{" "}
                                             </h3>
+                                            <ResponsiveContainer
+                                                width="100%"
+                                                height={300}
+                                            >
+                                                <BarChart
+                                                    data={contributor}
+                                                    margin={{
+                                                        top: 20,
+                                                        right: 30,
+                                                        left: 20,
+                                                        bottom: 5,
+                                                    }}
+                                                >
+                                                    <CartesianGrid strokeDasharray="3 3" />
+                                                    <XAxis dataKey="name" />
+                                                    <YAxis />
+                                                    <Tooltip />
+                                                    <Legend />
+                                                    <Bar dataKey="count">
+                                                        {contributor.map(
+                                                            (entry, index) => (
+                                                                <Cell
+                                                                    key={`cell-${index}`}
+                                                                    fill={
+                                                                        COLORS[
+                                                                        index %
+                                                                        COLORS.length
+                                                                        ]
+                                                                    }
+                                                                />
+                                                            )
+                                                        )}
+                                                    </Bar>
+                                                </BarChart>
+                                            </ResponsiveContainer>
+                                        </Col>
+                                    </Row>
+                                    <Row gutter={12}>
+                                        <Col span={24}>
+                                            <h3>Chart Articles Of Status </h3>
                                             <ResponsiveContainer
                                                 width="100%"
                                                 height={300}
@@ -285,10 +554,21 @@ const DashBoard = () => {
                                                     <YAxis />
                                                     <Tooltip />
                                                     <Legend />
-                                                    <Bar
-                                                        dataKey="count"
-                                                        fill={COLORS[1]}
-                                                    />
+                                                    <Bar dataKey="count">
+                                                        {totalByStatus.map(
+                                                            (entry, index) => (
+                                                                <Cell
+                                                                    key={`cell-${index}`}
+                                                                    fill={
+                                                                        COLORS[
+                                                                        index %
+                                                                        COLORS.length
+                                                                        ]
+                                                                    }
+                                                                />
+                                                            )
+                                                        )}
+                                                    </Bar>
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </Col>
@@ -369,34 +649,69 @@ const DashBoard = () => {
                                                 </Col>
                                             </Row>
                                         )}
+=======
+
                                     <Row gutter={12}>
                                         <Col span={24}>
                                             <h3>
-                                                Chart By Comment With Faculty
+                                                Percentage of Articles by
+                                                Faculty
                                             </h3>
                                             <ResponsiveContainer
                                                 width="100%"
                                                 height={300}
                                             >
-                                                <BarChart
-                                                    data={totalByComment}
-                                                    margin={{
-                                                        top: 20,
-                                                        right: 30,
-                                                        left: 20,
-                                                        bottom: 5,
-                                                    }}
+                                                <PieChart
+                                                    width={400}
+                                                    height={400}
                                                 >
-                                                    <CartesianGrid strokeDasharray="3 3" />
-                                                    <XAxis dataKey="name" />
-                                                    <YAxis />
-                                                    <Tooltip />
-                                                    <Legend />
-                                                    <Bar
+                                                    <Pie
+                                                        data={articeFaculty}
+                                                        cx="50%"
+                                                        cy="50%"
+                                                        labelLine={false}
+                                                        label={({
+                                                            name,
+                                                            percent,
+                                                        }) =>
+                                                            `${name} ${(
+                                                                percent * 100
+                                                            ).toFixed(0)}%`
+                                                        }
+                                                        outerRadius={80}
+                                                        fill="#8884d8"
                                                         dataKey="count"
-                                                        fill={COLORS[0]}
-                                                    />
-                                                </BarChart>
+                                                    >
+                                                        {articeFaculty.length ===
+                                                            1 && (
+                                                            <Cell
+                                                                key={`cell-0`}
+                                                                fill={COLORS[0]}
+                                                            />
+                                                        )}
+                                                        {articeFaculty.length >
+                                                            1 &&
+                                                            articeFaculty.map(
+                                                                (
+                                                                    entry,
+                                                                    index
+                                                                ) => (
+                                                                    <Cell
+                                                                        key={`cell-${index}`}
+                                                                        fill={
+                                                                            COLORS[
+                                                                                index %
+                                                                                    COLORS.length
+                                                                            ]
+                                                                        }
+                                                                    />
+                                                                )
+                                                            )}
+                                                    </Pie>
+                                                    <Tooltip />
+                                                    {articeFaculty.length >
+                                                        1 && <Legend />}
+                                                </PieChart>
                                             </ResponsiveContainer>
                                         </Col>
                                     </Row>

@@ -31,20 +31,29 @@ router.get(
   articlesController.getTotalArticlesByFaculty
 );
 router.get(
-  "/static/totalbyacademic/:facultyId",
-  articlesController.getTotalArticlesByAcademicYear
+    "/static/totalbyacademic",
+    articlesController.getTotalByAcademicYear
 );
 router.get(
-  "/static/totalyacademic",
-  articlesController.getTotalArticlesWithAcademicYear
-)
+    "/static/totalcontributor",
+    articlesController.getTotalContributor
+);
+// router.get("/static/totalbyfaculty", articlesController.getByFaculty);
 router.get(
-  "/static/totalbystatus/:facultyId",
-  articlesController.getTotalArticlesByStatusAndFaculty
+    "/static/totalbyacademic/:facultyId",
+    articlesController.getTotalArticlesByAcademicYear
 );
 router.get(
-  "/static/totalbyprivate/:facultyId",
-  articlesController.getTotalArticlesByPrivateAndFaculty
+    "/static/totalbystatus/:facultyId",
+    articlesController.getTotalArticlesByStatusAndFaculty
+);
+router.get(
+    "/static/totalbystatus",
+    articlesController.getTotalArticlesByStatus
+);
+router.get(
+    "/static/totalbyprivate/:facultyId",
+    articlesController.getTotalArticlesByPrivateAndFaculty
 );
 router.get(
   "/static/totalbycomment/:facultyId",

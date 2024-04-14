@@ -267,6 +267,7 @@ const AccountManagement = () => {
       dataIndex: "facultyId",
       key: "facultyId",
       render: (text, record) => {
+
         const faculty = faculties.find((faculty) => faculty._id === text);
         // Kiểm tra nếu vai trò là "admin" hoặc "guest" thì không hiển thị trường "Faculty"
         if (record.role === "admin" || record.role === "department") {
@@ -286,6 +287,8 @@ const AccountManagement = () => {
             </Space>
           );
         }
+
+
       },
     },
 
