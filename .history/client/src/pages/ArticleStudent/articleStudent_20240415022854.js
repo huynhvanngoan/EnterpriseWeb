@@ -228,8 +228,8 @@ const ArticleManagerStudent = () => {
                         message: "Notification",
                         description: "Article updated successfully",
                     });
-                    setFile(null);
-                    setImage(null);
+                    setFile(null)
+                    set
                 } else {
                     notification.error({
                         message: "Notification",
@@ -317,8 +317,6 @@ const ArticleManagerStudent = () => {
                                 message: `Notification`,
                                 description: "Article submit successful",
                             });
-                            setFile(null);
-                            setImage(null);
                             setopenModalCreate(false);
                             setShouldFetch(true);
                             setIsCheckboxChecked(false);
@@ -329,7 +327,6 @@ const ArticleManagerStudent = () => {
                         message: "Error",
                         description: "Failed to upload image",
                     });
-                    setIsCheckboxChecked(false);
                 }
             } else {
                 notification["error"]({

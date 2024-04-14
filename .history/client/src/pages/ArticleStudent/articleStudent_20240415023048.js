@@ -329,7 +329,6 @@ const ArticleManagerStudent = () => {
                         message: "Error",
                         description: "Failed to upload image",
                     });
-                    setIsCheckboxChecked(false);
                 }
             } else {
                 notification["error"]({
