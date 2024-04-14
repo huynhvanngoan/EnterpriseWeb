@@ -547,6 +547,7 @@ const AccountManagement = () => {
                       dataSource={user}
                   />
               </div>
+
               <Modal
                   title="Add Account"
                   visible={isModalVisible}

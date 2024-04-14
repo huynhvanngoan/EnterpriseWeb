@@ -180,303 +180,290 @@ const AccountManagement = () => {
     setEditModalVisible(true);
   };
   const columns = [
-      {
-          title: "ID",
-          dataIndex: "id",
-          key: "index",
-          render: (value, item, index) => (page - 1) * 10 + (index + 1),
-      },
-      {
-          title: "Name",
-          dataIndex: "name",
-          key: "name",
-          render: (text, record) => (
-              <Space size="middle">
-                  {text == null || text === undefined ? (
-                      ""
-                  ) : (
-                      <p style={{ margin: 0 }}>{titleCase(text)}</p>
-                  )}
-              </Space>
-          ),
-      },
-      {
-          title: "Email",
-          dataIndex: "email",
-          key: "email",
-      },
-      {
-          title: "Role",
-          dataIndex: "role",
-          key: "role",
-          width: "12%",
-          render: (text, record) => (
-              <Space size="middle">
-                  {text === "admin" ? (
-                      <Tag
-                          color="blue"
-                          key={text}
-                          style={{ width: 100, textAlign: "center" }}
-                          icon={<CopyOutlined />}
-                      >
-                          Admin
-                      </Tag>
-                  ) : text === "student" ? (
-                      <Tag
-                          color="green"
-                          key={text}
-                          style={{ width: 100, textAlign: "center" }}
-                          icon={<CheckCircleOutlined />}
-                      >
-                          Student
-                      </Tag>
-                  ) : text === "marketing" ? (
-                      <Tag
-                          color="green"
-                          key={text}
-                          style={{ width: 100, textAlign: "center" }}
-                          icon={<CheckCircleOutlined />}
-                      >
-                          Coordinator
-                      </Tag>
-                  ) : text === "department" ? (
-                      <Tag
-                          color="green"
-                          key={text}
-                          style={{ width: 100, textAlign: "center" }}
-                          icon={<CheckCircleOutlined />}
-                      >
-                          Manager
-                      </Tag>
-                  ) : text === "guest" ? (
-                      <Tag
-                          color="green"
-                          key={text}
-                          style={{ width: 100, textAlign: "center" }}
-                          icon={<CheckCircleOutlined />}
-                      >
-                          Guest
-                      </Tag>
-                  ) : null}
-              </Space>
-          ),
-      },
+    {
+      title: "ID",
+      dataIndex: "id",
+      key: "index",
+      render: (value, item, index) => (page - 1) * 10 + (index + 1),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text, record) => (
+        <Space size="middle">
+          {text == null || text === undefined ? (
+            ""
+          ) : (
+            <p style={{ margin: 0 }}>{titleCase(text)}</p>
+          )}
+        </Space>
+      ),
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Role",
+      dataIndex: "role",
+      key: "role",
+      width: "12%",
+      render: (text, record) => (
+        <Space size="middle">
+          {text === "admin" ? (
+            <Tag
+              color="blue"
+              key={text}
+              style={{ width: 100, textAlign: "center" }}
+              icon={<CopyOutlined />}
+            >
+              Admin
+            </Tag>
+          ) : text === "student" ? (
+            <Tag
+              color="green"
+              key={text}
+              style={{ width: 100, textAlign: "center" }}
+              icon={<CheckCircleOutlined />}
+            >
+              Student
+            </Tag>
+          ) : text === "marketing" ? (
+            <Tag
+              color="green"
+              key={text}
+              style={{ width: 100, textAlign: "center" }}
+              icon={<CheckCircleOutlined />}
+            >
+              Coordinator
+            </Tag>
+          ) : text === "department" ? (
+            <Tag
+              color="green"
+              key={text}
+              style={{ width: 100, textAlign: "center" }}
+              icon={<CheckCircleOutlined />}
+            >
+              Manager
+            </Tag>
+          ) : text === "guest" ? (
+            <Tag
+              color="green"
+              key={text}
+              style={{ width: 100, textAlign: "center" }}
+              icon={<CheckCircleOutlined />}
+            >
+              Guest
+            </Tag>
+          ) : null}
+        </Space>
+      ),
+    },
 
-      {
-          title: "Faculty",
-          dataIndex: "facultyId",
-          key: "facultyId",
-          render: (text, record) => {
-              const faculty = faculties.find((faculty) => faculty._id === text);
-              // Kiểm tra nếu vai trò là "admin" hoặc "guest" thì không hiển thị trường "Faculty"
-              if (record.role === "admin" || record.role === "department") {
-                  return null;
-              } else {
-                  return (
-                      <Space size="middle">
-                          {faculty ? (
-                              <Tag
-                                  color="blue"
-                                  key={faculty._id}
-                                  style={{ width: "auto", textAlign: "center" }}
-                              >
-                                  {faculty.name}
-                              </Tag>
-                          ) : null}
-                      </Space>
-                  );
-              }
-          },
-      },
-
-      {
-          title: "Actions",
-          key: "actions",
-          render: (text, record) => (
-              <Space>
-                  {record.role !== "admin" ? (
-                      <>
-                          <Button onClick={() => handleEditUser(record._id)}>
-                              Update
-                          </Button>
-                          <Popconfirm
-                              title="Are you sure delete this user?"
-                              onConfirm={() => handleDelete(record._id)}
-                              okText="Yes"
-                              cancelText="No"
+    {
+      title: "Faculty",
+      dataIndex: "facultyId",
+      key: "facultyId",
+      render: (text, record) => {
+          const faculty = faculties.find((faculty) => faculty._id === text);
+          // Kiểm tra nếu vai trò là "admin" hoặc "guest" thì không hiển thị trường "Faculty"
+          if (record.role === "admin" || record.role === "department") {
+              return null;
+          } else {
+              return (
+                  <Space size="middle">
+                      {faculty ? (
+                          <Tag
+                              color="blue"
+                              key={faculty._id}
+                              style={{ width: "auto", textAlign: "center" }}
                           >
-                              <Button danger style={{ color: "white" }}>
-                                  Delete
-                              </Button>
-                          </Popconfirm>
-                      </>
-                  ) : null}
-              </Space>
-          ),
+                              {faculty.name}
+                          </Tag>
+                      ) : null}
+                  </Space>
+              );
+          }
       },
+    },
+
+    {
+      title: "Actions",
+      key: "actions",
+      render: (text, record) => (
+        <Space>
+          {record.role !== "admin" ? (
+            <>
+              <Button onClick={() => handleEditUser(record._id)}>Update</Button>
+              <Popconfirm
+                title="Are you sure delete this user?"
+                onConfirm={() => handleDelete(record._id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button danger>Delete</Button>
+              </Popconfirm>
+            </>
+          ) : null}
+        </Space>
+      ),
+    },
   ];
 
   const handleListUser = async () => {
-      try {
-          const response = await userApi.listUserByAdmin({ page, limit: 10 });
-          console.log(response);
-          setUser(response.data);
-          setLoading(false);
-      } catch (error) {
-          console.log("Failed to fetch event list:" + error);
-      }
+    try {
+      const response = await userApi.listUserByAdmin({ page, limit: 10 });
+      console.log(response);
+      setUser(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.log("Failed to fetch event list:" + error);
+    }
   };
 
   const handleFilterEmail = async (email) => {
-      try {
-          const response = await userApi.searchUser(email);
-          setUser(response.data);
-      } catch (error) {
-          console.log("search to fetch user list:" + error);
-      }
+    try {
+      const response = await userApi.searchUser(email);
+      setUser(response.data);
+    } catch (error) {
+      console.log("search to fetch user list:" + error);
+    }
   };
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {
-      setIsModalVisible(true);
+    setIsModalVisible(true);
   };
 
   const handleCancel = () => {
-      setIsModalVisible(false);
-      setEditModalVisible(false);
+    setIsModalVisible(false);
+    setEditModalVisible(false);
   };
 
   const accountCreate = async (values) => {
-      try {
-          const formatData = {
-              name: values.name,
-              email: values.email,
-              password: values.password,
-              role: values.role,
-              facultyId: values.faculty,
-          };
-          console.log(formatData);
-          await axiosClient
-              .post("/auth/create", formatData)
-              .then((response) => {
-                  console.log(response);
-                  if (response.status === 400) {
-                      return message.error("Tài khoản đã tổn tại");
-                  } else if (
-                      response.message ===
-                      "Validation failed: Email has already been taken"
-                  ) {
-                      message.error("Email has already been taken");
-                  } else if (
-                      response.message ===
-                      "Validation failed: Phone has already been taken"
-                  ) {
-                      message.error(
-                          "Validation failed: Phone has already been taken"
-                      );
-                  } else if (response === undefined) {
-                      notification["error"]({
-                          message: `Notification`,
-                          description: "Account creation failed",
-                      });
-                  } else {
-                      notification["success"]({
-                          message: `Notification`,
-                          description: "Successfully created account",
-                      });
-                      setIsFieldsFilled({
-                          role: false,
-                          faculty: false,
-                          academic: false,
-                      });
-                      form.resetFields();
-                      handleList();
-                      history.push("/account-management");
-                  }
-              });
+    try {
+      const formatData = {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        role: values.role,
+        facultyId: values.faculty,
+      };
+      console.log(formatData);
+      await axiosClient.post("/auth/create", formatData).then((response) => {
+        console.log(response);
+        if (response.status === 400) {
+          return message.error("Tài khoản đã tổn tại");
+        } else if (
+          response.message === "Validation failed: Email has already been taken"
+        ) {
+          message.error("Email has already been taken");
+        } else if (
+          response.message === "Validation failed: Phone has already been taken"
+        ) {
+          message.error("Validation failed: Phone has already been taken");
+        } else if (response === undefined) {
+          notification["error"]({
+            message: `Notification`,
+            description: "Account creation failed",
+          });
+        } else {
+          notification["success"]({
+            message: `Notification`,
+            description: "Successfully created account",
+          });
+          setIsFieldsFilled({
+            role: false,
+            faculty: false,
+            academic: false,
+          });
+          form.resetFields();
+          handleList();
+          history.push("/account-management");
+        }
+      });
 
-          setIsModalVisible(false);
-      } catch (error) {
-          throw error;
-      }
-      setTimeout(function () {
-          setLoading(false);
-      }, 1000);
+      setIsModalVisible(false);
+    } catch (error) {
+      throw error;
+    }
+    setTimeout(function () {
+      setLoading(false);
+    }, 1000);
   };
 
   const CancelCreateRecruitment = () => {
-      setIsFieldsFilled({
-          role: false,
-          faculty: false,
-          academic: false,
-      });
-      form.resetFields();
-      history.push("/account-management");
+    setIsFieldsFilled({
+      role: false,
+      faculty: false,
+      academic: false,
+    });
+    form.resetFields();
+    history.push("/account-management");
   };
 
   const handleList = () => {
-      (async () => {
-          try {
-              const response = await userApi.listUserByAdmin({
-                  page: 1,
-                  limit: 1000,
-              });
-              console.log(response);
-              setUser(response.data);
-              setLoading(false);
-          } catch (error) {
-              console.log("Failed to fetch user list:" + error);
-          }
-      })();
+    (async () => {
+      try {
+        const response = await userApi.listUserByAdmin({
+          page: 1,
+          limit: 1000,
+        });
+        console.log(response);
+        setUser(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.log("Failed to fetch user list:" + error);
+      }
+    })();
   };
 
   useEffect(() => {
-      handleList();
-      window.scrollTo(0, 0);
-      const userAgent = navigator.userAgent;
-      const logData = async () => {
-          try {
-              const isChrome = /Chrome/.test(userAgent);
-              const isEdge = /Edge/.test(userAgent);
-              const isFirefox = /Firefox/.test(userAgent);
-              const isSafari = /Safari/.test(userAgent) && !isChrome; // Exclude Chrome-based Safari
-              const isOpera = /Opera/.test(userAgent);
-              let brower_user;
-              if (isChrome) {
-                  brower_user = "Chrome";
-              } else if (isEdge) {
-                  brower_user = "Edge";
-              } else if (isFirefox) {
-                  brower_user = "Firefox";
-                  console.log("User is likely using Firefox");
-              } else if (isSafari) {
-                  brower_user = "Safari";
-                  console.log("User is likely using Safari");
-              } else if (isOpera) {
-                  brower_user = "Opera";
-                  console.log("User is likely using Opera");
-              } else {
-                  console.log("Browser could not be identified");
-              }
-              const data = {
-                  url: window.location.href.replace(
-                      "http://localhost:3000/",
-                      ""
-                  ),
-                  browser: brower_user,
-              };
-              const response = await logApi.pushLog(data);
-              console.log(response.data);
-          } catch (error) {
-              console.error(error);
-          }
-      };
-      logData();
+    handleList();
+    window.scrollTo(0, 0);
+    const userAgent = navigator.userAgent;
+    const logData = async () => {
+      try {
+        const isChrome = /Chrome/.test(userAgent);
+        const isEdge = /Edge/.test(userAgent);
+        const isFirefox = /Firefox/.test(userAgent);
+        const isSafari = /Safari/.test(userAgent) && !isChrome; // Exclude Chrome-based Safari
+        const isOpera = /Opera/.test(userAgent);
+        let brower_user;
+        if (isChrome) {
+          brower_user = "Chrome";
+        } else if (isEdge) {
+          brower_user = "Edge";
+        } else if (isFirefox) {
+          brower_user = "Firefox";
+          console.log("User is likely using Firefox");
+        } else if (isSafari) {
+          brower_user = "Safari";
+          console.log("User is likely using Safari");
+        } else if (isOpera) {
+          brower_user = "Opera";
+          console.log("User is likely using Opera");
+        } else {
+          console.log("Browser could not be identified");
+        }
+        const data = {
+          url: window.location.href.replace("http://localhost:3000/", ""),
+          browser: brower_user,
+        };
+        const response = await logApi.pushLog(data);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    logData();
   }, []);
   return (
       <div>
-          <Spin spinning={loading} style={{ overflowY: "hidden" }}>
+          <Spin spinning={loading}>
               <div style={{ marginTop: 20, marginLeft: 24 }}>
                   <Breadcrumb>
                       <Breadcrumb.Item href="">
@@ -524,29 +511,19 @@ const AccountManagement = () => {
                       </PageHeader>
                   </div>
               </div>
-              {/* <div style={{ marginTop: 20, marginRight: 5 }}>
-                  <div id="account">
-                      <div id="account_container">
-                          <Card title="User Manager" bordered={false}>
-                              <Table
-                                  columns={columns}
-                                  dataSource={user}
-                                  // pagination={{
-                                  //     position: ["bottomCenter"],
+              <Table
+                  columns={columns}
+                  dataSource={user}
+                  pagination={{
+                      position: ["bottomCenter"],
+                      showSizeChanger: true,
+                      pageSizeOptions: ["10", "20", "30"],
+                      showTotal: (total, range) =>
+                          `Showing ${range[0]}-${range[1]} of ${total} items`,
+                      ...(user.length > 10 && { pageSize: 10 }), // Thêm điều kiện kiểm tra số lượng hàng
+                  }}
+              />
 
-                                  // }}
-                              />
-                          </Card>
-                      </div>
-                  </div>
-              </div> */}
-              <div style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}>
-                  <Table
-                      columns={columns}
-                      pagination={{ position: "bottomCenter" }}
-                      dataSource={user}
-                  />
-              </div>
               <Modal
                   title="Add Account"
                   visible={isModalVisible}
@@ -581,7 +558,7 @@ const AccountManagement = () => {
                           ]}
                           style={{ marginBottom: 10 }}
                       >
-                          <Input placeholder="Name" />
+                          <Input placeholder="Tên" />
                       </Form.Item>
 
                       <Form.Item

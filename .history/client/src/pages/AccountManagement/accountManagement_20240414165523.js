@@ -543,7 +543,7 @@ const AccountManagement = () => {
               <div style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}>
                   <Table
                       columns={columns}
-                      pagination={{ position: "bottomCenter" }}
+                      pagination={{ position: ["bottomCenter"] }}
                       dataSource={user}
                   />
               </div>
