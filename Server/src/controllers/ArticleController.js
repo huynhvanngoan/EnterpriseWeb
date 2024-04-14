@@ -170,10 +170,19 @@ exports.getByUserId = async (req, res) => {
 // Lấy tất cả bài viết công khai, bao gồm tên người dùng và gán vào thuộc tính author
 exports.getAllIsPublic = async (req, res) => {
     try {
-        const articles = await Article.find({ isPublic: true }).populate(
-            "userId",
-            "name"
-        );
+        const { facultyId } = req.params;
+
+        // Tìm tất cả người dùng thuộc khoa đó
+        const users = await User.find({ facultyId });
+
+        // Lấy danh sách id của các người dùng thuộc khoa
+        const userIds = users.map((user) => user._id);
+
+        // Tìm tất cả các bài báo có trạng thái public thuộc về faculty của người dùng
+        const articles = await Article.find({ userId: { $in: userIds }, isPublic: true })
+            .populate("userId", "name");
+
+        // Chuyển đổi dữ liệu để bao gồm tên tác giả
         const publicArticlesWithAuthors = articles.map((article) => {
             return {
                 ...article.toObject(),
@@ -207,6 +216,7 @@ exports.getByFacultyId = async (req, res) => {
         // Tìm tất cả người dùng thuộc khoa đó
         const users = await User.find({ facultyId });
 
+        console.log(users)
         // Lấy danh sách id của các người dùng thuộc khoa
         const userIds = users.map((user) => user._id);
 

@@ -59,9 +59,12 @@ const DashBoard = () => {
         const user = JSON.parse(localStorage.getItem("user"));
         setRole(user.role);
         setFaculty(user.facultyId);
+
         const fetchArticles = async () => {
+            const user = JSON.parse(localStorage.getItem("user"));
+            const facultyId = user.facultyId;
             try {
-                const response = await articleApi.getArticlePublic();
+                const response = await dashBoardApi.getArticlePublic(facultyId);
                 setArticles(response.data);
                 setLoading(false);
             } catch (error) {
@@ -70,6 +73,7 @@ const DashBoard = () => {
             }
         };
         fetchArticles();
+        console.log("arr", articles);
         const fetchData = async () => {
             try {
                 const user = JSON.parse(localStorage.getItem("user"));
@@ -331,13 +335,13 @@ const DashBoard = () => {
                                                             >
                                                                 {totalByFaculty.length ===
                                                                     1 && (
-                                                                    <Cell
-                                                                        key={`cell-0`}
-                                                                        fill={
-                                                                            COLORS[0]
-                                                                        }
-                                                                    />
-                                                                )}
+                                                                        <Cell
+                                                                            key={`cell-0`}
+                                                                            fill={
+                                                                                COLORS[0]
+                                                                            }
+                                                                        />
+                                                                    )}
                                                                 {totalByFaculty.length >
                                                                     1 &&
                                                                     totalByFaculty.map(
@@ -349,8 +353,8 @@ const DashBoard = () => {
                                                                                 key={`cell-${index}`}
                                                                                 fill={
                                                                                     COLORS[
-                                                                                        index %
-                                                                                            COLORS.length
+                                                                                    index %
+                                                                                    COLORS.length
                                                                                     ]
                                                                                 }
                                                                             />
@@ -434,8 +438,8 @@ const DashBoard = () => {
                                                                     key={`cell-${index}`}
                                                                     fill={
                                                                         COLORS[
-                                                                            index %
-                                                                                COLORS.length
+                                                                        index %
+                                                                        COLORS.length
                                                                         ]
                                                                     }
                                                                 />
@@ -471,8 +475,8 @@ const DashBoard = () => {
                                                                     key={`cell-${index}`}
                                                                     fill={
                                                                         COLORS[
-                                                                            index %
-                                                                                COLORS.length
+                                                                        index %
+                                                                        COLORS.length
                                                                         ]
                                                                     }
                                                                 />
@@ -489,92 +493,57 @@ const DashBoard = () => {
                             )}
                         </>
                     )}
-                    {role === "guest" && (
-                        <>
-                            <Row>
-                                <h1 style={{ marginLeft: 2 }}>
-                                    Public Aritcle
-                                </h1>
-                            </Row>
-                            <Row gutter={12}>
-                                {articles.map((article) =>
-                                    (role === "guest" &&
-                                        article.facultyId === faculty) ||
-                                    role !== "guest" ? (
-                                        <Col
-                                            span={6}
-                                            key={article._id}
-                                            className="text-center"
-                                        >
-                                            <Card className="card_total">
-                                                <div className="card_header">
-                                                    <h3>
-                                                        TITLE:{" "}
-                                                        {article.title.toUpperCase()}
-                                                    </h3>
-                                                </div>
-                                                <div className="card_body mb-5">
-                                                    {/* Đây là nơi hiển thị hình ảnh */}
-                                                    <img
-                                                        src={article.image}
-                                                        alt={article.title}
-                                                        style={{
-                                                            width: "auto",
-                                                            height: 150,
-                                                        }}
-                                                    />
-                                                </div>
-                                                <div className="card_body">
-                                                    {/* Hiển thị nội dung của bài viết */}
-                                                    <Typography.Paragraph>
-                                                        {article.content}
-                                                    </Typography.Paragraph>
-                                                </div>
-                                                <div>
-                                                    Author: {article.author}
-                                                </div>
-                                            </Card>
-                                        </Col>
-                                    ) : (
-                                        <Col
-                                            span={6}
-                                            key={article._id}
-                                            className="text-center"
-                                        >
-                                            <Card className="card_total">
-                                                <div className="card_header">
-                                                    <h3>
-                                                        TITLE:{" "}
-                                                        {article.title.toUpperCase()}
-                                                    </h3>
-                                                </div>
-                                                <div className="card_body mb-5">
-                                                    {/* Đây là nơi hiển thị hình ảnh */}
-                                                    <img
-                                                        src={article.image}
-                                                        alt={article.title}
-                                                        style={{
-                                                            width: "auto",
-                                                            height: 150,
-                                                        }}
-                                                    />
-                                                </div>
-                                                <div className="card_body">
-                                                    {/* Hiển thị nội dung của bài viết */}
-                                                    <Typography.Paragraph>
-                                                        {article.content}
-                                                    </Typography.Paragraph>
-                                                </div>
-                                                <div>
-                                                    Author: {article.author}
-                                                </div>
-                                            </Card>
-                                        </Col>
-                                    )
-                                )}
-                            </Row>
-                        </>
-                    )}
+
+                    <>
+                        <Row>
+                            <h1 style={{ marginLeft: 2 }}>
+                                Public Aritcle
+                            </h1>
+                        </Row>
+                        <Row gutter={12}>
+                            {articles.map((article) =>
+
+
+
+                                <Col
+                                    span={6}
+                                    key={article._id}
+                                    className="text-center"
+                                >
+                                    <Card className="card_total">
+                                        <div className="card_header">
+                                            <h3>
+                                                TITLE:{" "}
+                                                {article.title.toUpperCase()}
+                                            </h3>
+                                        </div>
+                                        <div className="card_body mb-5">
+                                            {/* Đây là nơi hiển thị hình ảnh */}
+                                            <img
+                                                src={article.image}
+                                                alt={article.title}
+                                                style={{
+                                                    width: "auto",
+                                                    height: 150,
+                                                }}
+                                            />
+                                        </div>
+                                        <div className="card_body">
+                                            {/* Hiển thị nội dung của bài viết */}
+                                            <Typography.Paragraph>
+                                                {article.content}
+                                            </Typography.Paragraph>
+                                        </div>
+                                        <div>
+                                            Author: {article.author}
+                                        </div>
+                                    </Card>
+                                </Col>
+
+                            )}
+                        </Row>
+                    </>
+
                 </div>
                 <BackTop style={{ textAlign: "right" }} />
             </Spin>

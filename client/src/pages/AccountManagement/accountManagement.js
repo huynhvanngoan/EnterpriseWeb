@@ -267,25 +267,25 @@ const AccountManagement = () => {
       dataIndex: "facultyId",
       key: "facultyId",
       render: (text, record) => {
-          const faculty = faculties.find((faculty) => faculty._id === text);
-          // Kiểm tra nếu vai trò là "admin" hoặc "guest" thì không hiển thị trường "Faculty"
-          if (record.role === "admin" || record.role === "guest" || record.role === "department") {
-              return null;
-          } else {
-              return (
-                  <Space size="middle">
-                      {faculty ? (
-                          <Tag
-                              color="blue"
-                              key={faculty._id}
-                              style={{ width: "auto", textAlign: "center" }}
-                          >
-                              {faculty.name}
-                          </Tag>
-                      ) : null}
-                  </Space>
-              );
-          }
+        const faculty = faculties.find((faculty) => faculty._id === text);
+        // Kiểm tra nếu vai trò là "admin" hoặc "guest" thì không hiển thị trường "Faculty"
+        if (record.role === "admin" || record.role === "department") {
+          return null;
+        } else {
+          return (
+            <Space size="middle">
+              {faculty ? (
+                <Tag
+                  color="blue"
+                  key={faculty._id}
+                  style={{ width: "auto", textAlign: "center" }}
+                >
+                  {faculty.name}
+                </Tag>
+              ) : null}
+            </Space>
+          );
+        }
       },
     },
 
@@ -514,7 +514,7 @@ const AccountManagement = () => {
                 <Table
                   columns={columns}
                   dataSource={user}
-                  // pagination={{ position: ["bottomCenter"] }}
+                  pagination={{ position: ["bottomCenter"] }}
                 />
               </Card>
             </div>
@@ -614,7 +614,7 @@ const AccountManagement = () => {
                 <Option value="guest">Guest</Option>
               </Select>
             </Form.Item>
-            
+
             <Form.Item>
               <Button
                 style={{
@@ -748,31 +748,6 @@ const AccountManagement = () => {
                 {faculties.map((faculty) => (
                   <Option key={faculty._id} value={faculty._id}>
                     {faculty.name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name="academic"
-              label="Academic"
-              rules={[
-                {
-                  required: !isFieldsFilled.academic,
-                  message: "Pick a Academic!",
-                },
-              ]}
-              style={{ marginBottom: 10 }}
-            >
-              <Select
-                placeholder="Pick Academic"
-                onChange={() =>
-                  setIsFieldsFilled({ ...isFieldsFilled, academic: true })
-                }
-              >
-                {/* Render options for faculties */}
-                {academics.map((academic) => (
-                  <Option key={academic._id} value={academic._id}>
-                    {academic.name}
                   </Option>
                 ))}
               </Select>

@@ -29,7 +29,16 @@ const dashBoardApi = {
     } catch (error) {
       throw error;
     }
-  }, 
+  },
+  async getArticlePublic(facultyId) {
+    const url = `article/public/all/` + facultyId;
+    try {
+      const response = await axiosClient.get(url);
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  },
   async getTotalArticlesWithAcademicYear() {
     const url = `/static/totalyacademic`;
     try {

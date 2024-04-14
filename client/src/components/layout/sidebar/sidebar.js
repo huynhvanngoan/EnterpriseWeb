@@ -72,6 +72,12 @@ function Sidebar({ isSidebarCollapsed, setIsSidebarCollapsed }) {
 
     const menuSidebarUser = [
         {
+            key: "dash-board",
+            title: "Dashboards",
+            link: "/dash-board",
+            icon: <DashboardOutlined />,
+        },
+        {
             key: "name-page",
             title: "Student Page",
         },
@@ -122,7 +128,7 @@ function Sidebar({ isSidebarCollapsed, setIsSidebarCollapsed }) {
         history.push(link);
     };
 
-    useEffect(() => {});
+    useEffect(() => { });
 
     const toggleSidebar = () => {
         setIsSidebarCollapsed(!isSidebarCollapsed);
@@ -160,60 +166,60 @@ function Sidebar({ isSidebarCollapsed, setIsSidebarCollapsed }) {
             >
                 {user.role === "student"
                     ? menuSidebarUser.map((map) => (
-                          <Menu.Item
-                              onClick={() => navigate(map.link, map.key)}
-                              key={map.key}
-                              icon={map.icon}
-                              className="customeClass"
-                          >
-                              {map.title}
-                          </Menu.Item>
-                      ))
+                        <Menu.Item
+                            onClick={() => navigate(map.link, map.key)}
+                            key={map.key}
+                            icon={map.icon}
+                            className="customeClass"
+                        >
+                            {map.title}
+                        </Menu.Item>
+                    ))
                     : user.role === "admin"
-                    ? menuSidebarAdmin.map((map) => (
-                          <Menu.Item
-                              onClick={() => navigate(map.link, map.key)}
-                              key={map.key}
-                              icon={map.icon}
-                              className="customeClass"
-                          >
-                              {map.title}
-                          </Menu.Item>
-                      ))
-                    : user.role === "marketing"
-                    ? menuSidebarMarketing.map((map) => (
-                          <Menu.Item
-                              onClick={() => navigate(map.link, map.key)}
-                              key={map.key}
-                              icon={map.icon}
-                              className="customeClass"
-                          >
-                              {map.title}
-                          </Menu.Item>
-                      ))
-                    : user.role === "department"
-                    ? menuSidebarDepartment.map((map) => (
-                          <Menu.Item
-                              onClick={() => navigate(map.link, map.key)}
-                              key={map.key}
-                              icon={map.icon}
-                              className="customeClass"
-                          >
-                              {map.title}
-                          </Menu.Item>
-                      ))
-                    : user.role === "guest"
-                    ? menuSidebarGuest.map((map) => (
-                          <Menu.Item
-                              onClick={() => navigate(map.link, map.key)}
-                              key={map.key}
-                              icon={map.icon}
-                              className="customeClass"
-                          >
-                              {map.title}
-                          </Menu.Item>
-                      ))
-                    : null}
+                        ? menuSidebarAdmin.map((map) => (
+                            <Menu.Item
+                                onClick={() => navigate(map.link, map.key)}
+                                key={map.key}
+                                icon={map.icon}
+                                className="customeClass"
+                            >
+                                {map.title}
+                            </Menu.Item>
+                        ))
+                        : user.role === "marketing"
+                            ? menuSidebarMarketing.map((map) => (
+                                <Menu.Item
+                                    onClick={() => navigate(map.link, map.key)}
+                                    key={map.key}
+                                    icon={map.icon}
+                                    className="customeClass"
+                                >
+                                    {map.title}
+                                </Menu.Item>
+                            ))
+                            : user.role === "department"
+                                ? menuSidebarDepartment.map((map) => (
+                                    <Menu.Item
+                                        onClick={() => navigate(map.link, map.key)}
+                                        key={map.key}
+                                        icon={map.icon}
+                                        className="customeClass"
+                                    >
+                                        {map.title}
+                                    </Menu.Item>
+                                ))
+                                : user.role === "guest"
+                                    ? menuSidebarGuest.map((map) => (
+                                        <Menu.Item
+                                            onClick={() => navigate(map.link, map.key)}
+                                            key={map.key}
+                                            icon={map.icon}
+                                            className="customeClass"
+                                        >
+                                            {map.title}
+                                        </Menu.Item>
+                                    ))
+                                    : null}
             </Menu>
         </Sider>
     );

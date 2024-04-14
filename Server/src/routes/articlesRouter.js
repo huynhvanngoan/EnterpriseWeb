@@ -18,7 +18,9 @@ const upload = multer({ storage: storage });
 
 // Route thêm bài viết với hình ảnh và file đính kèm
 router.get("/:userId", articlesController.getByUserId);
-router.get("/public/all", articlesController.getAllIsPublic);
+router.get(
+  "/public/all/:facultyId",
+  articlesController.getAllIsPublic);
 router.get("/get/all", articlesController.getAll);
 router.get("/getbyfaculty/:facultyId", articlesController.getByFacultyId);
 router.get("/getapproved/all", articlesController.getAllIsApproved);

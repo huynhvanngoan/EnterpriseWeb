@@ -27,8 +27,8 @@ const ariticle = {
       throw error;
     }
   },
-  async getArticlePublic() {
-    const url = "/article/public/all";
+  async getArticlePublic(id) {
+    const url = `/article/public/all/` + id;
     try {
       const response = await axiosClient.get(url);
       return response;
