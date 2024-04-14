@@ -221,7 +221,6 @@ const DashBoard = () => {
           browser: brower_user,
         };
         const response = await logApi.pushLog(data);
-        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -551,36 +550,33 @@ const DashBoard = () => {
                     <Col span={24}>
                       <h3>Chart Url Count</h3>
                       <ResponsiveContainer width="100%" height={400}>
-                        <PieChart>
-                          <Pie
-                            data={urlStats}
-                            dataKey="count"
-                            nameKey="name"
-                            cx="50%"
-                            cy="50%"
-                            outerRadius={150} // Tăng bán kính của Pie Chart
-                            label={({ percent }) => {
-                              if (percent !== 0) {
-                                // Chỉ hiển thị label cho các phần tử có phần trăm khác 0
-                                return `${(percent * 100).toFixed(2)}%`; // Hiển thị 2 chữ số thập phân
-                              }
-                              return null; // Không hiển thị label cho các phần tử có phần trăm là 0
-                            }}
-                          >
+                        <BarChart
+                          data={urlStats}
+                          margin={{
+                            top: 20,
+                            right: -10,
+                            left: 10,
+                            bottom: 5,
+                          }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" />
+                          <XAxis dataKey="name" />
+                          <YAxis />
+                          <Tooltip />
+                          <Legend />
+                          <Bar dataKey="count">
                             {urlStats.map((entry, index) => (
                               <Cell
                                 key={`cell-${index}`}
                                 fill={COLORS[index % COLORS.length]}
                               />
                             ))}
-                          </Pie>
-                          <Tooltip />
-                          <Legend />
-                        </PieChart>
+                          </Bar>
+                        </BarChart>
                       </ResponsiveContainer>
                     </Col>
                   </Row>
-                  <Row gutter={12}>
+                  {/* <Row gutter={12}>
                     <Col span={24}>
                       <h3>Chart Brower Count</h3>
                       <ResponsiveContainer width="100%" height={400}>
@@ -603,6 +599,41 @@ const DashBoard = () => {
                           </Pie>
                           <Tooltip />
                           <Legend />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </Col>
+                  </Row> */}
+
+                  <Row gutter={12}>
+                    <Col span={24}>
+                      <h3>Chart Brower Count</h3>
+                      <ResponsiveContainer width="100%" height={300}>
+                        <PieChart width={400} height={400}>
+                          <Pie
+                            data={browerData}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={false}
+                            label={({ name, percent }) =>
+                              ` ${(percent * 100).toFixed(0)}%`
+                            }
+                            outerRadius={80}
+                            fill="#8884d8"
+                            dataKey="count"
+                          >
+                            {browerData.length === 1 && (
+                              <Cell key={`cell-0`} fill={COLORS[0]} />
+                            )}
+                            {browerData.length > 1 &&
+                              browerData.map((entry, index) => (
+                                <Cell
+                                  key={`cell-${index}`}
+                                  fill={COLORS[index % COLORS.length]}
+                                />
+                              ))}
+                          </Pie>
+                          <Tooltip />
+                          {browerData.length > 1 && <Legend />}
                         </PieChart>
                       </ResponsiveContainer>
                     </Col>
