@@ -69,11 +69,6 @@ const ArticleManagerStudent = () => {
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
     const [shouldFetch, setShouldFetch] = useState(true);
     const [academicFinal, setAcademicFinal] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 10;
-    const handlePageChange = (page) => {
-        setCurrentPage(page); // Cập nhật currentPage khi chuyển trang
-    };
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
@@ -147,9 +142,8 @@ const ArticleManagerStudent = () => {
         const day = date.getDate();
         const month = date.getMonth() + 1;
         const year = date.getFullYear();
-        const formattedDate = `${day < 10 ? "0" + day : day}/${
-            month < 10 ? "0" + month : month
-        }/${year}`;
+        const formattedDate = `${day < 10 ? "0" + day : day}/${month < 10 ? "0" + month : month
+            }/${year}`;
         return formattedDate;
     };
 
@@ -203,13 +197,10 @@ const ArticleManagerStudent = () => {
             if (file && !fileFormatError) {
                 const formData = new FormData();
                 formData.append("file", file);
-                const fileResponse = await fetch(
-                    "http://localhost:8080/api/file/upload",
-                    {
-                        method: "POST",
-                        body: formData,
-                    }
-                );
+                const fileResponse = await fetch("http://localhost:8080/api/file/upload", {
+                    method: "POST",
+                    body: formData,
+                });
                 const fileData = await fileResponse.json();
                 filePath = fileData.file.path;
                 notification.success({
@@ -223,13 +214,10 @@ const ArticleManagerStudent = () => {
             if (image && !fileFormatError) {
                 const formData2 = new FormData();
                 formData2.append("file", image);
-                const fileResponse2 = await fetch(
-                    "http://localhost:8080/api/file/upload",
-                    {
-                        method: "POST",
-                        body: formData2,
-                    }
-                );
+                const fileResponse2 = await fetch("http://localhost:8080/api/file/upload", {
+                    method: "POST",
+                    body: formData2,
+                });
                 const imageData = await fileResponse2.json();
                 imagePath = `http://localhost:8080/${imageData.file.path}`;
                 notification.success({
@@ -468,8 +456,7 @@ const ArticleManagerStudent = () => {
         {
             title: "ID",
             key: "index",
-            render: (text, record, index) =>
-                (currentPage - 1) * pageSize + index + 1,
+            render: (text, record, index) => index + 1,
         },
         {
             title: "Title",
@@ -703,19 +690,18 @@ const ArticleManagerStudent = () => {
                         <div id="my__event_container__list">
                             <PageHeader subTitle="" style={{ fontSize: 14 }}>
                                 <Row>
-                                    <Col
-                                        span="12"
-                                        style={{ alignItems: "center" }}
-                                    >
-                                        <Space>
-                                            <Button
-                                                onClick={showModal}
-                                                icon={<PlusOutlined />}
-                                                style={{ marginLeft: 10 }}
-                                            >
-                                                Add Ariticle
-                                            </Button>
-                                        </Space>
+                                    <Col span="6">
+                                        
+                                            <Space>
+                                                <Button
+                                                    onClick={showModal}
+                                                    icon={<PlusOutlined />}
+                                                    style={{ marginLeft: 10 }}
+                                                >
+                                                    Add Ariticle
+                                                </Button>
+                                            </Space>
+                                        </Row>
                                     </Col>
                                 </Row>
                             </PageHeader>
@@ -724,10 +710,7 @@ const ArticleManagerStudent = () => {
                     <div style={{ marginTop: 30 }}>
                         <Table
                             columns={columns}
-                            pagination={{
-                                position: ["bottomCenter"],
-                                onChange: handlePageChange,
-                            }}
+                            pagination={{ position: ["bottomCenter"] }}
                             dataSource={category}
                         />
                     </div>

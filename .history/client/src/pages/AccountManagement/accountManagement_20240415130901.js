@@ -513,7 +513,7 @@ const AccountManagement = () => {
                                             {"Add Account"}
                                         </Button>
                                     </Row>
-                                </Col>
+                                
                         </PageHeader>
                     </div>
                 </div>

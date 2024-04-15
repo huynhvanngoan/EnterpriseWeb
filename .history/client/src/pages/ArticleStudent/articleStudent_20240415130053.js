@@ -69,11 +69,6 @@ const ArticleManagerStudent = () => {
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
     const [shouldFetch, setShouldFetch] = useState(true);
     const [academicFinal, setAcademicFinal] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 10;
-    const handlePageChange = (page) => {
-        setCurrentPage(page); // Cập nhật currentPage khi chuyển trang
-    };
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
@@ -468,8 +463,7 @@ const ArticleManagerStudent = () => {
         {
             title: "ID",
             key: "index",
-            render: (text, record, index) =>
-                (currentPage - 1) * pageSize + index + 1,
+            render: (text, record, index) => index + 1,
         },
         {
             title: "Title",
@@ -703,10 +697,7 @@ const ArticleManagerStudent = () => {
                         <div id="my__event_container__list">
                             <PageHeader subTitle="" style={{ fontSize: 14 }}>
                                 <Row>
-                                    <Col
-                                        span="12"
-                                        style={{ alignItems: "center" }}
-                                    >
+                                    <Col span="6">
                                         <Space>
                                             <Button
                                                 onClick={showModal}
@@ -724,10 +715,7 @@ const ArticleManagerStudent = () => {
                     <div style={{ marginTop: 30 }}>
                         <Table
                             columns={columns}
-                            pagination={{
-                                position: ["bottomCenter"],
-                                onChange: handlePageChange,
-                            }}
+                            pagination={{ position: ["bottomCenter"] }}
                             dataSource={category}
                         />
                     </div>

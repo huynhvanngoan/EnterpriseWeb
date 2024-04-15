@@ -501,7 +501,7 @@ const AccountManagement = () => {
                                 paddingTop: 20,
                                 paddingBottom: 20,
                             }}
-                        >
+                        >=
                                 <Col span="12">
                                     <Row justify="end">
                                         <Button
@@ -514,6 +514,7 @@ const AccountManagement = () => {
                                         </Button>
                                     </Row>
                                 </Col>
+                            </Row>
                         </PageHeader>
                     </div>
                 </div>

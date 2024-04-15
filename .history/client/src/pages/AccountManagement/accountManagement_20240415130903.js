@@ -502,7 +502,6 @@ const AccountManagement = () => {
                                 paddingBottom: 20,
                             }}
                         >
-                                <Col span="12">
                                     <Row justify="end">
                                         <Button
                                             style={{ marginLeft: 10 }}
@@ -513,7 +512,7 @@ const AccountManagement = () => {
                                             {"Add Account"}
                                         </Button>
                                     </Row>
-                                </Col>
+                                
                         </PageHeader>
                     </div>
                 </div>

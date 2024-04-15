@@ -301,41 +301,41 @@ const AcademicYear = () => {
         })();
         const userAgent = navigator.userAgent;
         const logData = async () => {
-
-            try {
-                const isEdge = /Edg\//.test(userAgent); // Check for Edge (version 79 or later)
-                const isChrome = /Chrome/.test(userAgent);
-                const isFirefox = /Firefox/.test(userAgent);
-                const isSafari = /Safari/.test(userAgent) && !isChrome; // Exclude Chrome-based Safari
-                const isOpera = /Opera/.test(userAgent);
-                let brower_user;
-                if (isEdge) {
-                    brower_user = "Microsoft Edge";
-                } else if (isChrome) {
-                    brower_user = "Chrome";
-                } else if (isFirefox) {
-                    brower_user = "Firefox";
-                    console.log("User is likely using Firefox");
-                } else if (isSafari) {
-                    brower_user = "Safari";
-                    console.log("User is likely using Safari");
-                } else if (isOpera) {
-                    brower_user = "Opera";
-                    console.log("User is likely using Opera");
-                } else {
-                    console.log("Browser could not be identified");
+           
+                try {
+                    const isEdge = /Edg\//.test(userAgent); // Check for Edge (version 79 or later)
+                    const isChrome = /Chrome/.test(userAgent);
+                    const isFirefox = /Firefox/.test(userAgent);
+                    const isSafari = /Safari/.test(userAgent) && !isChrome; // Exclude Chrome-based Safari
+                    const isOpera = /Opera/.test(userAgent);
+                    let brower_user;
+                    if (isEdge) {
+                        brower_user = "Microsoft Edge";
+                    } else if (isChrome) {
+                        brower_user = "Chrome";
+                    } else if (isFirefox) {
+                        brower_user = "Firefox";
+                        console.log("User is likely using Firefox");
+                    } else if (isSafari) {
+                        brower_user = "Safari";
+                        console.log("User is likely using Safari");
+                    } else if (isOpera) {
+                        brower_user = "Opera";
+                        console.log("User is likely using Opera");
+                    } else {
+                        console.log("Browser could not be identified");
+                    }
+                    const data = {
+                        url: window.location.href.replace(
+                            "http://localhost:3000/",
+                            ""
+                        ),
+                        browser: brower_user,
+                    };
+                    const response = await logApi.pushLog(data);
+                } catch (error) {
+                    console.error(error);
                 }
-                const data = {
-                    url: window.location.href.replace(
-                        "http://localhost:3000/",
-                        ""
-                    ),
-                    browser: brower_user,
-                };
-                const response = await logApi.pushLog(data);
-            } catch (error) {
-                console.error(error);
-            }
         };
         logData();
     }, []);
@@ -359,6 +359,7 @@ const AcademicYear = () => {
                         <div id="my__event_container__list">
                             <PageHeader subTitle="" style={{ fontSize: 14 }}>
                                 <Row>
+                                >
                                     <Col span="6">
                                         <Row justify="end">
                                             <Space>

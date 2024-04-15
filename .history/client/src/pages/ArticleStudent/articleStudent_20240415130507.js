@@ -468,8 +468,7 @@ const ArticleManagerStudent = () => {
         {
             title: "ID",
             key: "index",
-            render: (text, record, index) =>
-                (currentPage - 1) * pageSize + index + 1,
+            render: (text, record, index) => index + 1,
         },
         {
             title: "Title",
@@ -724,10 +723,7 @@ const ArticleManagerStudent = () => {
                     <div style={{ marginTop: 30 }}>
                         <Table
                             columns={columns}
-                            pagination={{
-                                position: ["bottomCenter"],
-                                onChange: handlePageChange,
-                            }}
+                            pagination={{ position: ["bottomCenter"] }}
                             dataSource={category}
                         />
                     </div>

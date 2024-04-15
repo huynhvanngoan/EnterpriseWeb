@@ -69,11 +69,6 @@ const ArticleManagerStudent = () => {
     const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
     const [shouldFetch, setShouldFetch] = useState(true);
     const [academicFinal, setAcademicFinal] = useState([]);
-    const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 10;
-    const handlePageChange = (page) => {
-        setCurrentPage(page); // Cập nhật currentPage khi chuyển trang
-    };
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
@@ -196,10 +191,8 @@ const ArticleManagerStudent = () => {
         }
 
         setLoading(true);
-
         try {
-            // Cập nhật tệp tin tài liệu
-            let filePath;
+            // Nếu file không hợp lệ thì không cập nhật file
             if (file && !fileFormatError) {
                 const formData = new FormData();
                 formData.append("file", file);
@@ -211,48 +204,66 @@ const ArticleManagerStudent = () => {
                     }
                 );
                 const fileData = await fileResponse.json();
-                filePath = fileData.file.path;
-                notification.success({
-                    message: "Notification",
-                    description: "Document file updated successfully",
-                });
-            }
+                const filePath = fileData.file.path;
 
-            // Cập nhật hình ảnh
-            let imagePath;
-            if (image && !fileFormatError) {
-                const formData2 = new FormData();
-                formData2.append("file", image);
-                const fileResponse2 = await fetch(
-                    "http://localhost:8080/api/file/upload",
-                    {
-                        method: "POST",
-                        body: formData2,
-                    }
+                // Kiểm tra và cập nhật hình ảnh
+                if (image && !fileFormatError) {
+                    const formData2 = new FormData();
+                    formData2.append("file", image);
+                    const fileResponse2 = await fetch(
+                        "http://localhost:8080/api/file/upload",
+                        {
+                            method: "POST",
+                            body: formData2,
+                        }
+                    );
+                    const imageData = await fileResponse2.json();
+                    const imagePath =
+                        `http://localhost:8080/` + imageData.file.path;
+
+                    const updatedArticle = {
+                        ...editArticleData,
+                        title: values.title,
+                        content: values.content,
+                        file: filePath,
+                        image: imagePath,
+                    };
+
+                    await articleApi.updateArticle(updatedArticle, id);
+                } else {
+                    const updatedArticle = {
+                        ...editArticleData,
+                        title: values.title,
+                        content: values.content,
+                        file: filePath,
+                    };
+
+                    await articleApi.updateArticle(updatedArticle, id);
+                }
+            } else {
+                // Nếu không có file mới, chỉ cập nhật title và content
+                const updatedArticle = {
+                    ...editArticleData,
+                    title: values.title,
+                    content: values.content,
+                };
+
+                const response = await articleApi.updateArticle(
+                    updatedArticle,
+                    id
                 );
-                const imageData = await fileResponse2.json();
-                imagePath = `http://localhost:8080/${imageData.file.path}`;
-                notification.success({
-                    message: "Notification",
-                    description: "Image file updated successfully",
-                });
+                if (response.article) {
+                    notification.success({
+                        message: "Notification",
+                        description: "Article updated successfully",
+                    });
+                } else {
+                    notification.error({
+                        message: "Notification",
+                        description: "Article updated error",
+                    });
+                }
             }
-
-            // Cập nhật cả tệp tin tài liệu và hình ảnh
-            const updatedArticle = {
-                ...editArticleData,
-                title: values.title,
-                content: values.content,
-                file: filePath,
-                image: imagePath,
-            };
-            await articleApi.updateArticle(updatedArticle, id);
-
-            // Hiển thị thông báo thành công
-            notification.success({
-                message: "Notification",
-                description: "Article updated successfully",
-            });
             setOpenModalEdit(false);
             setShouldFetch(true);
         } catch (error) {
@@ -265,6 +276,7 @@ const ArticleManagerStudent = () => {
             setLoading(false);
         }
     };
+
     const handleOkUser = async (values) => {
         if (!isCheckboxChecked) {
             notification.error({
@@ -464,12 +476,13 @@ const ArticleManagerStudent = () => {
         }
     };
     console.log("check Academic Year", academics);
+
     const columns = [
         {
             title: "ID",
             key: "index",
-            render: (text, record, index) =>
-                (currentPage - 1) * pageSize + index + 1,
+            datak
+            render: (text, record, index) => ,
         },
         {
             title: "Title",
@@ -703,19 +716,26 @@ const ArticleManagerStudent = () => {
                         <div id="my__event_container__list">
                             <PageHeader subTitle="" style={{ fontSize: 14 }}>
                                 <Row>
-                                    <Col
-                                        span="12"
-                                        style={{ alignItems: "center" }}
-                                    >
-                                        <Space>
-                                            <Button
-                                                onClick={showModal}
-                                                icon={<PlusOutlined />}
-                                                style={{ marginLeft: 10 }}
-                                            >
-                                                Add Ariticle
-                                            </Button>
-                                        </Space>
+                                    <Col span="18">
+                                        <Input
+                                            placeholder="Search by name"
+                                            allowClear
+                                            onChange={handleFilter}
+                                            style={{ width: 300 }}
+                                        />
+                                    </Col>
+                                    <Col span="6">
+                                        <Row justify="end">
+                                            <Space>
+                                                <Button
+                                                    onClick={showModal}
+                                                    icon={<PlusOutlined />}
+                                                    style={{ marginLeft: 10 }}
+                                                >
+                                                    Add Ariticle
+                                                </Button>
+                                            </Space>
+                                        </Row>
                                     </Col>
                                 </Row>
                             </PageHeader>
@@ -724,10 +744,7 @@ const ArticleManagerStudent = () => {
                     <div style={{ marginTop: 30 }}>
                         <Table
                             columns={columns}
-                            pagination={{
-                                position: ["bottomCenter"],
-                                onChange: handlePageChange,
-                            }}
+                            pagination={{ position: ["bottomCenter"] }}
                             dataSource={category}
                         />
                     </div>

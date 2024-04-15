@@ -514,6 +514,7 @@ const AccountManagement = () => {
                                         </Button>
                                     </Row>
                                 </Col>
+                            </Row>
                         </PageHeader>
                     </div>
                 </div>

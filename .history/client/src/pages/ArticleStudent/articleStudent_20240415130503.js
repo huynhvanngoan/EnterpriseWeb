@@ -71,9 +71,8 @@ const ArticleManagerStudent = () => {
     const [academicFinal, setAcademicFinal] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 10;
-    const handlePageChange = (page) => {
-        setCurrentPage(page); // Cập nhật currentPage khi chuyển trang
-    };
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 10;
     const handleAgreeTermsChange = (e) => {
         setIsCheckboxChecked(e.target.checked);
         if (e.target.checked) {
@@ -468,8 +467,7 @@ const ArticleManagerStudent = () => {
         {
             title: "ID",
             key: "index",
-            render: (text, record, index) =>
-                (currentPage - 1) * pageSize + index + 1,
+            render: (text, record, index) => index + 1,
         },
         {
             title: "Title",
@@ -724,10 +722,7 @@ const ArticleManagerStudent = () => {
                     <div style={{ marginTop: 30 }}>
                         <Table
                             columns={columns}
-                            pagination={{
-                                position: ["bottomCenter"],
-                                onChange: handlePageChange,
-                            }}
+                            pagination={{ position: ["bottomCenter"] }}
                             dataSource={category}
                         />
                     </div>
