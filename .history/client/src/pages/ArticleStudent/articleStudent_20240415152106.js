@@ -83,8 +83,6 @@ const ArticleManagerStudent = () => {
     };
 
     const showModal = () => {
-        form.resetFields();
-
         setopenModalCreate(true);
     };
 
@@ -335,6 +333,7 @@ const ArticleManagerStudent = () => {
                                 message: `Notification`,
                                 description: "Article submit successful",
                             });
+                            form.resetFields();
 
                             setFile(null);
                             setImage(null);

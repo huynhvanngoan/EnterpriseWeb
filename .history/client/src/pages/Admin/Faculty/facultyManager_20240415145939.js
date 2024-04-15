@@ -57,77 +57,66 @@ const FacultyManager = () => {
   };
 
   const handleOkUser = async (values) => {
-      setLoading(true);
-      try {
-          const { name, marketingCoordinator } = values;
-          const isDuplicate = category.some((item) => item.name === name);
-          if (isDuplicate) {
-              setLoading(false);
-              return notification["error"]({
-                  message: `Notification`,
-                  description: "Faculty name already exists.",
-              });
-          }
-          const academic = {
-              name,
-              marketingCoordinator,
-          };
-          return facultyApi.createFaculty(academic).then((response) => {
-              if (response === undefined) {
-                  notification["error"]({
-                      message: `Notification`,
-                      description: "Create Faculty failure",
-                  });
-              } else {
-                  notification["success"]({
-                      message: `Notification`,
-                      description: "Create successful Faculty",
-                  });
-                  setOpenModalCreate(false);
-                  handleCategoryList();
-              }
-          });
-      } catch (error) {
-          throw error;
+    setLoading(true);
+    try {
+      const { name, marketingCoordinator } = values;
+      const isDuplicate = category.some((item) => item.name === name);
+      if (isDuplicate) {
+        setLoading(false);
+        return notification["error"]({
+          message: `Notification`,
+          description: "Faculty name already exists.",
+        });
       }
+      const academic = {
+        name,
+        marketingCoordinator,
+      };
+      return facultyApi.createFaculty(academic).then((response) => {
+        if (response === undefined) {
+          notification["error"]({
+            message: `Notification`,
+            description: "Create Faculty failure",
+          });
+        } else {
+          notification["success"]({
+            message: `Notification`,
+            description: "Create successful Faculty",
+          });
+          setOpenModalCreate(false);
+          handleCategoryList();
+        }
+      });
+    } catch (error) {
+      throw error;
+    }
   };
 
   const handleUpdateCategory = async (values) => {
-      setLoading(true);
-      try {
-          const { name, marketingCoordinator } = values;
-          const isDuplicate = category.some(
-              (item) => item.name === name && item._id !== id
-          );
-          if (isDuplicate) {
-              setLoading(false);
-              return notification["error"]({
-                  message: `Notification`,
-                  description: "Faculty name already exists.",
-              });
-          }
-          const categoryList = {
-              name,
-              marketingCoordinator,
-          };
-          return facultyApi.updateFaculty(categoryList, id).then((response) => {
-              if (response === undefined) {
-                  notification["error"]({
-                      message: `Notification`,
-                      description: "Update Fail",
-                  });
-              } else {
-                  notification["success"]({
-                      message: `Notification`,
-                      description: "Update success",
-                  });
-                  handleCategoryList();
-                  setOpenModalUpdate(false);
-              }
+    setLoading(true);
+    try {
+      const categoryList = {
+        name: values.name,
+        marketingCoordinator: values.marketingCoordinator,
+      };
+      return facultyApi.updateFaculty(categoryList, id).then((response) => {
+        if (response === undefined) {
+          notification["error"]({
+            message: `Notification`,
+            description: "Update Fail",
           });
-      } catch (error) {
-          throw error;
-      }
+        } else {
+          notification["success"]({
+            message: `Notification`,
+            description: "Update success",
+          });
+          handleCategoryList();
+          setOpenModalUpdate(false);
+        }
+      });
+    } catch (error) {
+      throw error;
+    }
   };
 
   const handleCancel = (type) => {

@@ -83,8 +83,6 @@ const ArticleManagerStudent = () => {
     };
 
     const showModal = () => {
-        form.resetFields();
-
         setopenModalCreate(true);
     };
 
@@ -330,12 +328,12 @@ const ArticleManagerStudent = () => {
                                 message: `Notification`,
                                 description: "Create Academic failure",
                             });
+                            form.validateFields()
                         } else {
                             notification["success"]({
                                 message: `Notification`,
                                 description: "Article submit successful",
                             });
-
                             setFile(null);
                             setImage(null);
                             setopenModalCreate(false);
