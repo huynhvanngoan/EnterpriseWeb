@@ -83,8 +83,6 @@ const ArticleManagerStudent = () => {
     };
 
     const showModal = () => {
-        form.resetFields();
-
         setopenModalCreate(true);
     };
 
