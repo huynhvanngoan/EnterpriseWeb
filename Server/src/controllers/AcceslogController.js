@@ -16,48 +16,23 @@ exports.pustLog = async (req, res) => {
   }
 };
 
-// exports.getAccessLogStatsWithUrl = async (req, res) => {
-//   try {
-//     // Nhóm các bản ghi theo URL và đếm số lần xuất hiện
-//     const urlStats = await AccessLog.aggregate([
-//       {
-//         $group: {
-//           _id: "$url", // Nhóm theo trường URL
-//           count: { $sum: 1 }, // Đếm số lần xuất hiện cho mỗi nhóm
-//         },
-//       },
-//       {
-//         $sort: { count: -1 }, // Sắp xếp theo số lần truy cập giảm dần (hiển thị URL truy cập nhiều nhất trước)
-//       },
-//     ]);
-//     const formattedUrlStats = urlStats.map((item) => ({
-//       name: item._id,
-//       count: item.count,
-//     }));
-//     res.status(200).json({ data: formattedUrlStats });
-//   } catch (error) {
-//     console.error("Lỗi khi lấy thống kê truy cập:", error);
-//     res.status(500).json({ message: "Lỗi hệ thống" });
-//   }
-// };
-
 exports.getAccessLogStatsWithUrl = async (req, res) => {
   try {
     // Nhóm các bản ghi theo URL không có dấu # và đếm số lần xuất hiện
     const urlStats = await AccessLog.aggregate([
       {
         $match: {
-          url: { $not: /#/ },  
+          url: { $not: /#/ },
         },
       },
       {
         $group: {
-          _id: "$url",  
-          count: { $sum: 1 },  
+          _id: "$url",
+          count: { $sum: 1 },
         },
       },
       {
-        $sort: { count: -1 }, 
+        $sort: { count: -1 },
       },
     ]);
 

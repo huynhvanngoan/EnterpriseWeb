@@ -576,34 +576,7 @@ const DashBoard = () => {
                       </ResponsiveContainer>
                     </Col>
                   </Row>
-                  {/* <Row gutter={12}>
-                    <Col span={24}>
-                      <h3>Chart Brower Count</h3>
-                      <ResponsiveContainer width="100%" height={400}>
-                        <PieChart>
-                          <Pie
-                            data={browerData}
-                            dataKey="count"
-                            nameKey="name"
-                            cx="50%"
-                            cy="50%"
-                            outerRadius={150}
-                            label
-                          >
-                            {browerData.map((entry, index) => (
-                              <Cell
-                                key={`cell-${index}`}
-                                fill={COLORS[index % COLORS.length]}
-                              />
-                            ))}
-                          </Pie>
-                          <Tooltip />
-                          <Legend />
-                        </PieChart>
-                      </ResponsiveContainer>
-                    </Col>
-                  </Row> */}
-
+            
                   <Row gutter={12}>
                     <Col span={24}>
                       <h3>Chart Brower Count</h3>
