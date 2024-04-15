@@ -748,7 +748,7 @@ const ArticleManager = () => {
                                 <Image src={articleDetail.image} />
                             </div>
                             <Button
-                                style={{ marginTop: "20px" }}
+                                style={}
                                 key="download"
                                 onClick={() =>
                                     handleDownloadArticle(articleDetail._id)
