@@ -43,7 +43,6 @@ import commentApi from "../../apis/commentApi";
 import FileSaver from "file-saver";
 import logApi from "../../apis/logApi";
 import ModalTerms from "../../components/ModalTerms/ModalTerms";
-import styled from "styled-components";
 const { Option } = Select;
 const ArticleManagerStudent = () => {
     const [category, setCategory] = useState([]);
@@ -723,7 +722,7 @@ const ArticleManagerStudent = () => {
                         </div>
                     </div>
                     <div style={{ marginTop: 30 }}>
-                        <StyledTable
+                        <Table
                             columns={columns}
                             pagination={{
                                 position: ["bottomCenter"],
@@ -1068,50 +1067,5 @@ const ArticleManagerStudent = () => {
         </div>
     );
 };
-// Thêm vào cuối file
-const StyledTable = styled(Table)`
-    @media (max-width: 1200px) {
-        .ant-table-thead > tr > th,
-        .ant-table-tbody > tr > td {
-            padding: 8px;
-            font-size: 14px;
-        }
-    }
 
-    @media (max-width: 992px) {
-        .ant-table-thead > tr > th,
-        .ant-table-tbody > tr > td {
-            padding: 6px;
-            font-size: 12px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        .ant-table-thead > tr > th,
-        .ant-table-tbody > tr > td {
-            padding: 4px;
-            font-size: 10px;
-        }
-
-        .ant-table-cell-ellipsis {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .ant-table-thead > tr > th,
-        .ant-table-tbody > tr > td {
-            padding: 2px;
-            font-size: 8px;
-        }
-
-        .ant-table-cell-ellipsis {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-    }
-`;
 export default ArticleManagerStudent;

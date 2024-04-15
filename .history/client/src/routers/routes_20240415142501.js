@@ -86,7 +86,8 @@ const StyledContent = styled(Content)`
     flex-grow: 1;
     margin-top: 55px;
     margin-left: 230px;
-
+    width: calc(100% - 230px);
+    
     @media (max-width: 1200px) {
         margin-left: ${(props) => (props.collapsed ? "200px" : "100px")};
     }
@@ -99,7 +100,9 @@ const StyledContent = styled(Content)`
         margin-left: ${(props) => (props.collapsed ? "100px" : "60px")};
     }
 
- 
+    @media (max-width: 576px) {
+        margin-left: ${(props) => (props.collapsed ? "50px" : "30px")};
+    }
 `;
 const RouterURL = withRouter(({ location }) => {
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);

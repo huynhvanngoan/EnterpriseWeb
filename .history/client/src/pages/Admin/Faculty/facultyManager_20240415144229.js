@@ -395,6 +395,13 @@ const FacultyManager = () => {
                       <Form.Item
                           name="marketingCoordinator"
                           label="Marketing Coordinator"
+                          rules={[
+                              {
+                                  required: true,
+                                  message:
+                                      "Please select a marketing coordinator!",
+                              },
+                          ]}
                           style={{ marginBottom: 10 }}
                       >
                           <Select placeholder="Select marketing coordinator">

@@ -188,8 +188,7 @@ const AccountManagement = () => {
             title: "ID",
             dataIndex: "id",
             key: "index",
-            render: (text, record, index) =>
-                (currentPage - 1) * pageSize + index + 1,
+            render: (value, item, index) => (page - 1) * 10 + (index + 1),
         },
         {
             title: "Name",
@@ -372,7 +371,7 @@ const AccountManagement = () => {
                 .then((response) => {
                     console.log(response);
                     if (response.status === 400) {
-                        return message.error("Account is available");
+                        return message.error("Tài khoản đã tổn tại");
                     } else if (
                         response.message ===
                         "Validation failed: Email has already been taken"

@@ -110,7 +110,7 @@ const AcademicYear = () => {
                     closureDate: values.closureDate,
                     finalClosureDate: values.finalClosureDate,
                 };
-                return academicApi.updateAcademy(academic, id).then((response) => {
+                return academicApi.updateAcademy(academic).then((response) => {
                     if (response === undefined) {
                         notification["error"]({
                             message: `Notification`,

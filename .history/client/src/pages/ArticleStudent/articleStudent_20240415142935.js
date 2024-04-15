@@ -43,7 +43,6 @@ import commentApi from "../../apis/commentApi";
 import FileSaver from "file-saver";
 import logApi from "../../apis/logApi";
 import ModalTerms from "../../components/ModalTerms/ModalTerms";
-import styled from "styled-components";
 const { Option } = Select;
 const ArticleManagerStudent = () => {
     const [category, setCategory] = useState([]);
@@ -723,7 +722,7 @@ const ArticleManagerStudent = () => {
                         </div>
                     </div>
                     <div style={{ marginTop: 30 }}>
-                        <StyledTable
+                        <Table
                             columns={columns}
                             pagination={{
                                 position: ["bottomCenter"],

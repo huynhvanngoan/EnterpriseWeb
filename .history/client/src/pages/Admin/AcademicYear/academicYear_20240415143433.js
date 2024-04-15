@@ -107,23 +107,31 @@ const AcademicYear = () => {
             if (finalClosureDate.isAfter(closureDate)) {
                 const academic = {
                     name,
-                    closureDate: values.closureDate,
-                    finalClosureDate: values.finalClosureDate,
+                    closureDate: closureDate.format("YYYY-MM-DD"),
+                    finalClosureDate: finalClosureDate.format("YYYY-MM-DD"),
                 };
-                return academicApi.updateAcademy(academic, id).then((response) => {
+                return academicApi.updateAcademy(academic).then((response) => {
                     if (response === undefined) {
                         notification["error"]({
                             message: `Notification`,
                             description: "Update failed",
                         });
                     } else {
+                        // Update the category state with the updated academic year object
+                        setCategory((prevCategory) =>
+                            prevCategory.map((item) =>
+                                item._id === response.data._id
+                                    ? response.data
+                                    : item
+                            )
+                        );
                         notification["success"]({
                             message: `Notification`,
-                            description: "Update succes",
+                            description: "Update successful",
                         });
-                        handleAcademicList();
                         setOpenModalUpdate(false);
                     }
+                    setLoading(false);
                 });
             } else {
                 setLoading(false);
@@ -134,6 +142,7 @@ const AcademicYear = () => {
                 });
             }
         } catch (error) {
+            setLoading(false);
             throw error;
         }
     };
@@ -150,7 +159,7 @@ const AcademicYear = () => {
     const handleAcademicList = async () => {
         try {
             await academicApi.listAcademic().then((res) => {
-                setCategory(res.data);
+                setCategory([...res.data]);
                 setLoading(false);
             });
         } catch (error) {

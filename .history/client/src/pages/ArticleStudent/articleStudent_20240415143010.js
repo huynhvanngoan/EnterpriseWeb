@@ -723,7 +723,7 @@ const ArticleManagerStudent = () => {
                         </div>
                     </div>
                     <div style={{ marginTop: 30 }}>
-                        <StyledTable
+                        <StyledTabl
                             columns={columns}
                             pagination={{
                                 position: ["bottomCenter"],
