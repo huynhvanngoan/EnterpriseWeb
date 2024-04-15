@@ -230,6 +230,8 @@ const DashBoard = () => {
         logData();
     }, []);
 
+    console.log("urlStats", urlStats);
+    console.log("browerData", browerData);
 
     return (
         <div>

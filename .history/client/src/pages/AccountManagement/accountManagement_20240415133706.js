@@ -367,7 +367,7 @@ const AccountManagement = () => {
                 .then((response) => {
                     console.log(response);
                     if (response.status === 400) {
-                        return message.error("Account is available");
+                        return message.error("Tài khoản đã tổn tại");
                     } else if (
                         response.message ===
                         "Validation failed: Email has already been taken"
@@ -510,6 +510,7 @@ const AccountManagement = () => {
                                 </Col>
                             </Row>
                         </PageHeader>
+                      
                     </div>
                 </div>
                 <div style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}>

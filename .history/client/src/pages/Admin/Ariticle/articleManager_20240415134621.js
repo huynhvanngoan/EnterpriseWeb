@@ -641,29 +641,34 @@ const ArticleManager = () => {
                         </Breadcrumb>
                     </div>
 
-                    {isDepartment() && (
-                        <div style={{ marginTop: 20 }}>
-                            <div id="my__event_container__list">
-                                <PageHeader
-                                    subTitle=""
-                                    style={{ fontSize: 14 }}
-                                >
-                                    <Row>
-                                        <Button
-                                            type="primary"
-                                            icon={<DownloadOutlined />}
-                                            style={{ marginBottom: 16 }}
-                                            onClick={handleDownloadAll}
-                                        >
-                                            Download All
-                                        </Button>
-                                    </Row>
-                                </PageHeader>
-                            </div>
+                    <div style={{ marginTop: 20 }}>
+                        <div id="my__event_container__list">
+                            <PageHeader subTitle="" style={{ fontSize: 14 }}>
+                                <Row>
+                                    <Col span="18">
+                                        <Input
+                                            placeholder="Search by name"
+                                            allowClear
+                                            onChange={handleFilter}
+                                            style={{ width: 300 }}
+                                        />
+                                    </Col>
+                                </Row>
+                            </PageHeader>
                         </div>
-                    )}
+                    </div>
 
                     <div style={{ marginTop: 30 }}>
+                        {isDepartment() && (
+                            <Button
+                                type="primary"
+                                icon={<DownloadOutlined />}
+                                style={{ marginBottom: 16 }}
+                                onClick={handleDownloadAll}
+                            >
+                                Download All
+                            </Button>
+                        )}
                         <Table
                             columns={columns}
                             pagination={{ position: ["bottomCenter"] }}

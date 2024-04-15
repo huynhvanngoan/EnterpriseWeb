@@ -844,16 +844,16 @@ exports.createArticle = async (req, res) => {
             });
             const title_mail = "Submission Notice";
             const content_mail = `
-                <h1>Notification</h1>
-                <div style="background-color: green; padding: 10px; color: white; text-aline:center">  
-                    <h3>Dear ${marketingC.name}</h3>
-                </div>
-                <p>I hope this email finds you well. I am writing to inform you that a student has recently submitted an article for consideration. </p>
-                <p>The article has been uploaded to our system and is now ready for review. We believe it aligns well with our marketing objectives and could potentially be a valuable addition to our content strategy.</p>
-                <p>Please let me know if you require any further information or assistance regarding this submission. I will be happy to provide any additional details you may need.</p>
-                <p>Thank you for your attention to this matter. We look forward to your feedback on the article.</p>
-                <div style="background-color: green; padding: 10px; color: white;">
-                <p>Best regards</p> 
+    <h1>Notification</h1>
+    <div style="background-color: green; padding: 10px; color: white; text-aline:center">  
+                <h3>Dear ${marketingC.name}</h3>
+            </div>
+            <p>I hope this email finds you well. I am writing to inform you that a student has recently submitted an article for consideration. </p>
+            <p>The article has been uploaded to our system and is now ready for review. We believe it aligns well with our marketing objectives and could potentially be a valuable addition to our content strategy.</p>
+            <p>Please let me know if you require any further information or assistance regarding this submission. I will be happy to provide any additional details you may need.</p>
+            <p>Thank you for your attention to this matter. We look forward to your feedback on the article.</p>
+            <div style="background-color: green; padding: 10px; color: white;">
+            <p>Best regards</p> 
              </div>
             `;
             const mailOptions = {

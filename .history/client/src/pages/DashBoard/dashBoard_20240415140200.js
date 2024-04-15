@@ -230,6 +230,8 @@ const DashBoard = () => {
         logData();
     }, []);
 
+    console.log("urlStats", urlStats);
+    console.log("browerData", browerData);
 
     return (
         <div>
@@ -406,7 +408,7 @@ const DashBoard = () => {
                                                                     key={`cell-${index}`}
                                                                     fill={
                                                                         COLORS[
-                                                                            index+1 %
+                                                                            index+2 %
                                                                                 COLORS.length
                                                                         ]
                                                                     }
@@ -453,7 +455,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index+2 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }
@@ -493,7 +495,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index+1 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }
@@ -536,7 +538,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index+3 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }
@@ -576,7 +578,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index +2 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }

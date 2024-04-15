@@ -44,7 +44,7 @@ const DashBoard = () => {
     const [loading, setLoading] = useState(true);
     const [articles, setArticles] = useState([]);
     const [totalAcademicYears, setTotalAcademicYears] = useState([]);
-    const [totalByFaculty, setTotalFaculties] = useState([]);
+    const [totalByFaculty, setTotalFaculties] = useState();
     // const [totalUser, setTotalUser] = useState(0);
     // const [totalAritcle, setTotalAritcle] = useState(0);
     const [articeFaculty, setArticleFaculty] = useState([]);
@@ -192,37 +192,35 @@ const DashBoard = () => {
         fetchData();
         const userAgent = navigator.userAgent;
         const logData = async () => {
-            try {
-                const isEdge = /Edg\//.test(userAgent); // Check for Edge (version 79 or later)
-                const isChrome = /Chrome/.test(userAgent);
-                const isFirefox = /Firefox/.test(userAgent);
-                const isSafari = /Safari/.test(userAgent) && !isChrome; // Exclude Chrome-based Safari
-                const isOpera = /Opera/.test(userAgent);
-                let brower_user;
-                if (isEdge) {
-                    brower_user = "Microsoft Edge";
-                } else if (isChrome) {
-                    brower_user = "Chrome";
-                } else if (isFirefox) {
-                    brower_user = "Firefox";
-                    console.log("User is likely using Firefox");
-                } else if (isSafari) {
-                    brower_user = "Safari";
-                    console.log("User is likely using Safari");
-                } else if (isOpera) {
-                    brower_user = "Opera";
-                    console.log("User is likely using Opera");
-                } else {
-                    console.log("Browser could not be identified");
-                }
-                const data = {
-                    url: window.location.href.replace(
-                        "http://localhost:3000/",
-                        ""
-                    ),
-                    browser: brower_user,
-                };
-                const response = await logApi.pushLog(data);
+           
+                try {
+                    const isEdge = /Edg\//.test(userAgent); // Check for Edge (version 79 or later)
+                    const isChrome = /Chrome/.test(userAgent);
+                    const isFirefox = /Firefox/.test(userAgent);
+                    const isSafari = /Safari/.test(userAgent) && !isChrome; // Exclude Chrome-based Safari
+                    const isOpera = /Opera/.test(userAgent);
+                    let brower_user;
+                    if (isEdge) {
+                      brower_user = "Microsoft Edge";
+                    } else if (isChrome) {
+                      brower_user = "Chrome";
+                    } else if (isFirefox) {
+                      brower_user = "Firefox";
+                      console.log("User is likely using Firefox");
+                    } else if (isSafari) {
+                      brower_user = "Safari";
+                      console.log("User is likely using Safari");
+                    } else if (isOpera) {
+                      brower_user = "Opera";
+                      console.log("User is likely using Opera");
+                    } else {
+                      console.log("Browser could not be identified");
+                    }
+                    const data = {
+                      url: window.location.href.replace("http://localhost:3000/", ""),
+                      browser: brower_user,
+                    };
+                    const response = await logApi.pushLog(data);
             } catch (error) {
                 console.error(error);
             }
@@ -230,6 +228,8 @@ const DashBoard = () => {
         logData();
     }, []);
 
+    console.log("urlStats", urlStats);
+    console.log("browerData", browerData);
 
     return (
         <div>
@@ -275,21 +275,10 @@ const DashBoard = () => {
                                                     <YAxis />
                                                     <Tooltip />
                                                     <Legend />
-                                                    <Bar dataKey="count">
-                                                        {totalAcademicYears.map(
-                                                            (entry, index) => (
-                                                                <Cell
-                                                                    key={`cell-${index}`}
-                                                                    fill={
-                                                                        COLORS[
-                                                                            index+3 %
-                                                                                COLORS.length
-                                                                        ]
-                                                                    }
-                                                                />
-                                                            )
-                                                        )}
-                                                    </Bar>
+                                                    <Bar
+                                                        dataKey="count"
+                                                        fill={COLORS[5]}
+                                                    />
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </Col>
@@ -302,35 +291,36 @@ const DashBoard = () => {
                                                 height={300}
                                             >
                                                 <BarChart
-                                                    data={totalByFaculty}
-                                                    margin={{
-                                                        top: 20,
-                                                        right: 30,
-                                                        left: 20,
-                                                        bottom: 5,
-                                                    }}
-                                                >
-                                                    <CartesianGrid strokeDasharray="3 3" />
-                                                    <XAxis dataKey="name" />
-                                                    <YAxis />
-                                                    <Tooltip />
-                                                    <Legend />
-                                                    <Bar dataKey="count">
-                                                        {totalByFaculty.map(
-                                                            (entry, index) => (
-                                                                <Cell
-                                                                    key={`cell-${index}`}
-                                                                    fill={
-                                                                        COLORS[
-                                                                            index+4 %
-                                                                                COLORS.length
-                                                                        ]
-                                                                    }
-                                                                />
-                                                            )
-                                                        )}
-                                                    </Bar>
-                                                </BarChart>
+                                                data={totalByFaculty}
+                                                margin={{
+                                                    top: 20,
+                                                    right: 30,
+                                                    left: 20,
+                                                    bottom: 5,
+                                                }}
+                                            >
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis dataKey="name" />
+                                                <YAxis />
+                                                <Tooltip />
+                                                <Legend />
+                                                <Bar dataKey="count">
+                                                    {totalByFaculty.map(
+                                                        (entry, index) => (
+                                                            <Cell
+                                                                key={`cell-${index}`}
+                                                                fill={
+                                                                    COLORS[
+                                                                    index %
+                                                                    COLORS.length
+                                                                    ]
+                                                                }
+                                                            />
+                                                        )
+                                                    )}
+                                                </Bar>
+                                            </BarChart>
+                                              
                                             </ResponsiveContainer>
                                         </Col>
                                     </Row>
@@ -357,21 +347,10 @@ const DashBoard = () => {
                                                     <YAxis />
                                                     <Tooltip />
                                                     <Legend />
-                                                    <Bar dataKey="count">
-                                                        {totalByStatus.map(
-                                                            (entry, index) => (
-                                                                <Cell
-                                                                    key={`cell-${index}`}
-                                                                    fill={
-                                                                        COLORS[
-                                                                            index+2 %
-                                                                                COLORS.length
-                                                                        ]
-                                                                    }
-                                                                />
-                                                            )
-                                                        )}
-                                                    </Bar>
+                                                    <Bar
+                                                        dataKey="count"
+                                                        fill={COLORS[1]}
+                                                    />
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </Col>
@@ -399,21 +378,10 @@ const DashBoard = () => {
                                                     <YAxis />
                                                     <Tooltip />
                                                     <Legend />
-                                                    <Bar dataKey="count">
-                                                        {totalByStatus.map(
-                                                            (entry, index) => (
-                                                                <Cell
-                                                                    key={`cell-${index}`}
-                                                                    fill={
-                                                                        COLORS[
-                                                                            index+1 %
-                                                                                COLORS.length
-                                                                        ]
-                                                                    }
-                                                                />
-                                                            )
-                                                        )}
-                                                    </Bar>
+                                                    <Bar
+                                                        dataKey="count"
+                                                        fill={COLORS[0]}
+                                                    />
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </Col>
@@ -453,7 +421,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index+2 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }
@@ -493,7 +461,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index+1 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }
@@ -536,7 +504,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index+3 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }
@@ -576,7 +544,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index +2 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }

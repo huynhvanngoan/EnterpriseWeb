@@ -326,7 +326,7 @@ const FacultyManager = () => {
               <PageHeader subTitle="" style={{ fontSize: 14 }}>
                 
                   <Col span="12">
-                    <Row justify="start">
+                    <Row a="end">
                       <Space>
                         <Button
                           onClick={showModal}

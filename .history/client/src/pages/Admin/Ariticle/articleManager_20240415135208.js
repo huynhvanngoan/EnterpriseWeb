@@ -641,14 +641,11 @@ const ArticleManager = () => {
                         </Breadcrumb>
                     </div>
 
-                    {isDepartment() && (
-                        <div style={{ marginTop: 20 }}>
-                            <div id="my__event_container__list">
-                                <PageHeader
-                                    subTitle=""
-                                    style={{ fontSize: 14 }}
-                                >
-                                    <Row>
+                    <div style={{ marginTop: 20 }}>
+                                    {isDepartment() && (
+                        <div id="my__event_container__list">
+                            <PageHeader subTitle="" style={{ fontSize: 14 }}>
+                                <Row>
                                         <Button
                                             type="primary"
                                             icon={<DownloadOutlined />}
@@ -657,11 +654,11 @@ const ArticleManager = () => {
                                         >
                                             Download All
                                         </Button>
-                                    </Row>
-                                </PageHeader>
-                            </div>
+                                </Row>
+                            </PageHeader>
                         </div>
-                    )}
+                    </div>
+                                    )}
 
                     <div style={{ marginTop: 30 }}>
                         <Table

@@ -358,19 +358,21 @@ const AcademicYear = () => {
                     <div style={{ marginTop: 20 }}>
                         <div id="my__event_container__list">
                             <PageHeader subTitle="" style={{ fontSize: 14 }}>
-                                <Col span="12">
-                                    <Row>
-                                        <Space>
-                                            <Button
-                                                onClick={showModal}
-                                                icon={<PlusOutlined />}
-                                                style={{ marginLeft: 10 }}
-                                            >
-                                                Add Academic Year
-                                            </Button>
-                                        </Space>
-                                    </Row>
-                                </Col>
+                                <Row>
+                                    <Col span="12">
+                                        <Row justify="end">
+                                            <Space>
+                                                <Button
+                                                    onClick={showModal}
+                                                    icon={<PlusOutlined />}
+                                                    style={{ marginLeft: 10 }}
+                                                >
+                                                    Add Academic Year
+                                                </Button>
+                                            </Space>
+                                        </Row>
+                                    </Col>
+                                </Row>
                             </PageHeader>
                         </div>
                     </div>
