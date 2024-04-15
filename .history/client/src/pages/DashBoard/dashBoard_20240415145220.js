@@ -230,6 +230,8 @@ const DashBoard = () => {
         logData();
     }, []);
 
+    console.log("urlStats", urlStats);
+    console.log("browerData", browerData);
 
     return (
         <div>
@@ -790,7 +792,7 @@ const DashBoard = () => {
                                                     }) =>
                                                         ` ${(
                                                             percent * 100
-                                                        ).toFixed(2)}%`
+                                                        ).toFixed(0)}%`
                                                     }
                                                     outerRadius={80}
                                                     fill="#8884d8"
