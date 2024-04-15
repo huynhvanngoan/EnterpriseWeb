@@ -306,175 +306,181 @@ const FacultyManager = () => {
     logData();
   }, []);
   return (
-      <div>
-          <Spin spinning={loading}>
-              <div className="container">
-                  <div style={{ marginTop: 20 }}>
-                      <Breadcrumb>
-                          <Breadcrumb.Item href="">
-                              <HomeOutlined />
-                          </Breadcrumb.Item>
-                          <Breadcrumb.Item href="">
-                              <ShoppingOutlined />
-                              <span>Faculty Manager</span>
-                          </Breadcrumb.Item>
-                      </Breadcrumb>
-                  </div>
+    <div>
+      <Spin spinning={loading}>
+        <div className="container">
+          <div style={{ marginTop: 20 }}>
+            <Breadcrumb>
+              <Breadcrumb.Item href="">
+                <HomeOutlined />
+              </Breadcrumb.Item>
+              <Breadcrumb.Item href="">
+                <ShoppingOutlined />
+                <span>Faculty Manager</span>
+              </Breadcrumb.Item>
+            </Breadcrumb>
+          </div>
 
-                  <div style={{ marginTop: 20 }}>
-                      <div id="my__event_container__list">
-                          <PageHeader subTitle="" style={{ fontSize: 14 }}>
-                              <Col span="12">
-                                  <Row justify="start">
-                                      <Space>
-                                          <Button
-                                              onClick={showModal}
-                                              icon={<PlusOutlined />}
-                                              style={{ marginLeft: 10 }}
-                                          >
-                                              Add Faculty
-                                          </Button>
-                                      </Space>
-                                  </Row>
-                              </Col>
-                          </PageHeader>
-                      </div>
-                  </div>
+          <div style={{ marginTop: 20 }}>
+            <div id="my__event_container__list">
+              <PageHeader subTitle="" style={{ fontSize: 14 }}>
+                
+                  <Col span="12">
+                    <Row justify="start">
+                      <Space>
+                        <Button
+                          onClick={showModal}
+                          icon={<PlusOutlined />}
+                          style={{ marginLeft: 10 }}
+                        >
+                          Add Faculty
+                        </Button>
+                      </Space>
+                    </Row>
+                  </Col>
+              </PageHeader>
+            </div>
+          </div>
 
-                  <div style={{ marginTop: 30 }}>
-                      <Table
-                          columns={columns}
-                          pagination={{ position: ["bottomCenter"] }}
-                          dataSource={category}
-                      />
-                  </div>
-              </div>
+          <div style={{ marginTop: 30 }}>
+            <Table
+              columns={columns}
+              pagination={{ position: ["bottomCenter"] }}
+              dataSource={category}
+            />
+          </div>
+        </div>
 
-              <Modal
-                  title="Add Faculty"
-                  visible={openModalCreate}
-                  style={{ top: 100 }}
-                  onOk={() => {
-                      form.validateFields()
-                          .then((values) => {
-                              form.resetFields();
-                              handleOkUser(values);
-                          })
-                          .catch((info) => {
-                              console.log("Validate Failed:", info);
-                          });
-                  }}
-                  onCancel={() => handleCancel("create")}
-                  okText="Done"
-                  cancelText="Cancel"
-                  width={600}
+        <Modal
+          title="Add Faculty"
+          visible={openModalCreate}
+          style={{ top: 100 }}
+          onOk={() => {
+            form
+              .validateFields()
+              .then((values) => {
+                form.resetFields();
+                handleOkUser(values);
+              })
+              .catch((info) => {
+                console.log("Validate Failed:", info);
+              });
+          }}
+          onCancel={() => handleCancel("create")}
+          okText="Done"
+          cancelText="Cancel"
+          width={600}
+        >
+          <Form
+            form={form}
+            name="eventCreate"
+            layout="vertical"
+            initialValues={{
+              residence: ["zhejiang", "hangzhou", "xihu"],
+              prefix: "86",
+            }}
+            scrollToFirstError
+          >
+            <Form.Item
+              name="name"
+              label="Name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter a name!",
+                },
+              ]}
+              style={{ marginBottom: 10 }}
+            >
+              <Input placeholder="Name" />
+            </Form.Item>
+            <Form.Item
+              name="marketingCoordinator"
+              label="Marketing Coordinator"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select a marketing coordinator!",
+                },
+              ]}
+              style={{ marginBottom: 10 }}
+            >
+              <Select placeholder="Select marketing coordinator">
+                {users.map((user) => (
+                  <Option key={user._id} value={user._id}>
+                    {user.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        <Modal
+          title="Edit Faculty"
+          visible={openModalUpdate}
+          style={{ top: 100 }}
+          onOk={() => {
+            form2
+              .validateFields()
+              .then((values) => {
+                form2.resetFields();
+                handleUpdateCategory(values);
+              })
+              .catch((info) => {
+                console.log("Validate Failed:", info);
+              });
+          }}
+          onCancel={handleCancel}
+          okText="Done"
+          cancelText="Cancel"
+          width={600}
+        >
+          <Form
+            form={form2}
+            name="facultyUpdate"
+            layout="vertical"
+            initialValues={{
+              residence: ["zhejiang", "hangzhou", "xihu"],
+              prefix: "86",
+            }}
+            scrollToFirstError
+          >
+            <Form.Item
+              name="name"
+              label="Name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please enter a name!",
+                },
+              ]}
+              style={{ marginBottom: 10 }}
+            >
+              <Input placeholder="Name" />
+            </Form.Item>
+            <Form.Item
+              name="marketingCoordinator"
+              label="Marketing Coordinator"
+              style={{ marginBottom: 10 }}
+            >
+              <Select
+                placeholder="Select marketing coordinator"
+                defaultValue={form2.getFieldValue("marketingCoordinator")}
               >
-                  <Form
-                      form={form}
-                      name="eventCreate"
-                      layout="vertical"
-                      initialValues={{
-                          residence: ["zhejiang", "hangzhou", "xihu"],
-                          prefix: "86",
-                      }}
-                      scrollToFirstError
-                  >
-                      <Form.Item
-                          name="name"
-                          label="Name"
-                          rules={[
-                              {
-                                  required: true,
-                                  message: "Please enter a name!",
-                              },
-                          ]}
-                          style={{ marginBottom: 10 }}
-                      >
-                          <Input placeholder="Name" />
-                      </Form.Item>
-                      <Form.Item
-                          name="marketingCoordinator"
-                          label="Marketing Coordinator"
-                          style={{ marginBottom: 10 }}
-                      >
-                          <Select placeholder="Select marketing coordinator">
-                              {users.map((user) => (
-                                  <Option key={user._id} value={user._id}>
-                                      {user.name}
-                                  </Option>
-                              ))}
-                          </Select>
-                      </Form.Item>
-                  </Form>
-              </Modal>
+                {users.map((user) => (
+                  <Option key={user._id} value={user._id}>
+                    {user.name}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Form>
+        </Modal>
 
-              <Modal
-                  title="Edit Faculty"
-                  visible={openModalUpdate}
-                  style={{ top: 100 }}
-                  onOk={() => {
-                      form2
-                          .validateFields()
-                          .then((values) => {
-                              form2.resetFields();
-                              handleUpdateCategory(values);
-                          })
-                          .catch((info) => {
-                              console.log("Validate Failed:", info);
-                          });
-                  }}
-                  onCancel={handleCancel}
-                  okText="Done"
-                  cancelText="Cancel"
-                  width={600}
-              >
-                  <Form
-                      form={form2}
-                      name="facultyUpdate"
-                      layout="vertical"
-                      initialValues={{
-                          residence: ["zhejiang", "hangzhou", "xihu"],
-                          prefix: "86",
-                      }}
-                      scrollToFirstError
-                  >
-                      <Form.Item
-                          name="name"
-                          label="Name"
-                          rules={[
-                              {
-                                  required: true,
-                                  message: "Please enter a name!",
-                              },
-                          ]}
-                          style={{ marginBottom: 10 }}
-                      >
-                          <Input placeholder="Name" />
-                      </Form.Item>
-                      <Form.Item
-                          name="marketingCoordinator"
-                          label="Marketing Coordinator"
-                          style={{ marginBottom: 10 }}
-                      >
-                          <Select
-                              placeholder="Select marketing coordinator"
-                              defaultValue={form2.getFieldValue(
-                                  "marketingCoordinator"
-                              )}
-                          >
-                              {users.map((user) => (
-                                  <Option key={user._id} value={user._id}>
-                                      {user.name}
-                                  </Option>
-                              ))}
-                          </Select>
-                      </Form.Item>
-                  </Form>
-              </Modal>
-
-              <BackTop style={{ textAlign: "right" }} />
-          </Spin>
-      </div>
+        <BackTop style={{ textAlign: "right" }} />
+      </Spin>
+    </div>
   );
 };
 

@@ -55,11 +55,7 @@ const AccountManagement = () => {
     const [editModalVisible, setEditModalVisible] = useState(false);
     const [selectedUserForEdit, setSelectedUserForEdit] = useState(null);
     const [id, setId] = useState();
-    const [currentPage, setCurrentPage] = useState(1);
-    const pageSize = 10;
-    const handlePageChange = (page) => {
-        setCurrentPage(page); // Cập nhật currentPage khi chuyển trang
-    };
+
     const handleUpdate = async (values) => {
         try {
             const user = {
@@ -188,8 +184,7 @@ const AccountManagement = () => {
             title: "ID",
             dataIndex: "id",
             key: "index",
-            render: (text, record, index) =>
-                (currentPage - 1) * pageSize + index + 1,
+            render: (value, item, index) => (page - 1) * 10 + (index + 1),
         },
         {
             title: "Name",
@@ -326,14 +321,31 @@ const AccountManagement = () => {
         },
     ];
 
-    const handleListUser = async () => {
+    const handleListUser = async (currentPage) => {
         try {
-            const response = await userApi.listUserByAdmin({ page, limit: 10 });
-            console.log(response);
-            setUser(response.data);
-            setLoading(false);
+            setLoading(true); // Đặt trạng thái loading thành true khi bắt đầu tải dữ liệu
+            const response = await userApi.listUserByAdmin({
+                page: currentPage,
+                limit: 1000, // Số lượng người dùng trên mỗi trang
+            });
+            console.log("response", response);
+
+            const userData = response.data; // Dữ liệu người dùng từ API
+            console.log("userData", userData);
+            const totalUsers = response.total; // Tổng số người dùng từ cơ sở dữ liệu
+
+            const totalPages = Math.ceil(totalUsers / 10); // Tính tổng số trang dựa trên tổng số người dùng và số lượng người dùng trên mỗi trang
+
+            setUser(userData); // Cập nhật dữ liệu người dùng trong state
+            setPage(currentPage); // Cập nhật trang hiện tại
+
+            setLoading(false); // Đặt trạng thái loading thành false khi hoàn tất tải dữ liệu
+
+
+            return totalPages; // Trả về tổng số trang để xử lý phân trang
         } catch (error) {
-            console.log("Failed to fetch event list:" + error);
+            console.log("Failed to fetch user list:" + error);
+            setLoading(false); // Đặt trạng thái loading thành false nếu có lỗi xảy ra
         }
     };
 
@@ -520,10 +532,7 @@ const AccountManagement = () => {
                 <div style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}>
                     <Table
                         columns={columns}
-                        pagination={{
-                            position: ["bottomCenter"],
-                            onChange: handlePageChange,
-                        }}
+                        pagination={{ position: "bottomCenter" }}
                         dataSource={user}
                     />
                 </div>

@@ -57,9 +57,8 @@ const AccountManagement = () => {
     const [id, setId] = useState();
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 10;
-    const handlePageChange = (page) => {
-        setCurrentPage(page); // Cập nhật currentPage khi chuyển trang
-    };
+    const [currentPage, setCurrentPage] = useState(1);
+    const pageSize = 10;
     const handleUpdate = async (values) => {
         try {
             const user = {
@@ -188,8 +187,7 @@ const AccountManagement = () => {
             title: "ID",
             dataIndex: "id",
             key: "index",
-            render: (text, record, index) =>
-                (currentPage - 1) * pageSize + index + 1,
+            render: (value, item, index) => (page - 1) * 10 + (index + 1),
         },
         {
             title: "Name",
@@ -337,6 +335,7 @@ const AccountManagement = () => {
         }
     };
 
+    
     const handleFilterEmail = async (email) => {
         try {
             const response = await userApi.searchUser(email);
@@ -520,10 +519,7 @@ const AccountManagement = () => {
                 <div style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}>
                     <Table
                         columns={columns}
-                        pagination={{
-                            position: ["bottomCenter"],
-                            onChange: handlePageChange,
-                        }}
+                        pagination={{ position: "bottomCenter" }}
                         dataSource={user}
                     />
                 </div>

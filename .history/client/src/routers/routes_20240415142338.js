@@ -99,7 +99,9 @@ const StyledContent = styled(Content)`
         margin-left: ${(props) => (props.collapsed ? "100px" : "60px")};
     }
 
- 
+    @media (max-width: 576px) {
+        margin-left: ${(props) => (props.collapsed ? "50px" : "30px")};
+    }
 `;
 const RouterURL = withRouter(({ location }) => {
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);

@@ -188,8 +188,7 @@ const AccountManagement = () => {
             title: "ID",
             dataIndex: "id",
             key: "index",
-            render: (text, record, index) =>
-                (currentPage - 1) * pageSize + index + 1,
+            render: (value, item, index) => (page - 1) * 10 + (index + 1),
         },
         {
             title: "Name",
