@@ -325,8 +325,8 @@ const FacultyManager = () => {
             <div id="my__event_container__list">
               <PageHeader subTitle="" style={{ fontSize: 14 }}>
                 
-                  <Col span="12">
-                    <Row justify="start">
+                  <Col span="6">
+                    <Row justify="end">
                       <Space>
                         <Button
                           onClick={showModal}
@@ -338,6 +338,7 @@ const FacultyManager = () => {
                       </Space>
                     </Row>
                   </Col>
+                </Row>
               </PageHeader>
             </div>
           </div>

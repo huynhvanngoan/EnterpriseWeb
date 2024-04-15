@@ -494,10 +494,33 @@ const AccountManagement = () => {
                 </div>
                 <div id="account">
                     <div id="account_container">
-                        <PageHeader subTitle="" style={{ fontSize: 14 }}>
-                            <Row>
+                    <PageHeader subTitle="" style={{ fontSize: 14 }}>
+                                <Row>
+                                    <Col
+                                        span="12"
+                                    >
+                                        <Space>
+                                            <Button
+                                                onClick={showModal}
+                                                icon={<PlusOutlined />}
+                                                style={{ marginLeft: 10 }}
+                                            >
+                                                Add Ariticle
+                                            </Button>
+                                        </Space>
+                                    </Col>
+                                </Row>
+                            </PageHeader>
+                        <PageHeader
+                            subTitle=""
+                            style={{
+                                fontSize: 14,
+                                paddingTop: 20,
+                                paddingBottom: 20,
+                            }}
+                        >
                                 <Col span="12">
-                                    <Space>
+                                    <Row justify="end">
                                         <Button
                                             style={{ marginLeft: 10 }}
                                             icon={<PlusOutlined />}
@@ -506,9 +529,8 @@ const AccountManagement = () => {
                                         >
                                             {"Add Account"}
                                         </Button>
-                                    </Space>
+                                    </Row>
                                 </Col>
-                            </Row>
                         </PageHeader>
                     </div>
                 </div>
@@ -629,7 +651,7 @@ const AccountManagement = () => {
                                 <Option value="guest">Guest</Option>
                             </Select>
                         </Form.Item>
-                        {}
+                        { }
                         <Form.Item>
                             <Button
                                 style={{

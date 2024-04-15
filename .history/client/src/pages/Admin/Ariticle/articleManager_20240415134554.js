@@ -641,38 +641,30 @@ const ArticleManager = () => {
                         </Breadcrumb>
                     </div>
 
-                    {isDepartment() && (
-                        <div style={{ marginTop: 20 }}>
-                            <div id="my__event_container__list">
-                                <PageHeader
-                                    subTitle=""
-                                    style={{ fontSize: 14 }}
-                                >
-                                    <Row>
-                                        <Button
-                                            type="primary"
-                                            icon={<DownloadOutlined />}
-                                            style={{ marginBottom: 16 }}
-                                            onClick={handleDownloadAll}
-                                        >
-                                            Download All
-                                        </Button>
-                                    </Row>
-                                </PageHeader>
+                    <div style={{ marginTop: 20 }}>
+                        <div id="my__event_container__list">
+                            <div style={{ marginTop: 30 }}>
+                                {isDepartment() && (
+                                    <Button
+                                        type="primary"
+                                        icon={<DownloadOutlined />}
+                                        style={{ marginBottom: 16 }}
+                                        onClick={handleDownloadAll}
+                                    >
+                                        Download All
+                                    </Button>
+                                )}
+                                <Table
+                                    columns={columns}
+                                    pagination={{ position: ["bottomCenter"] }}
+                                    dataSource={category}
+                                    rowKey="_id"
+                                    onRow={(record) => ({
+                                        onClick: () => handleRowClick(record), // chỉ lưu id của bài viết đã chọn
+                                    })}
+                                />
                             </div>
                         </div>
-                    )}
-
-                    <div style={{ marginTop: 30 }}>
-                        <Table
-                            columns={columns}
-                            pagination={{ position: ["bottomCenter"] }}
-                            dataSource={category}
-                            rowKey="_id"
-                            onRow={(record) => ({
-                                onClick: () => handleRowClick(record), // chỉ lưu id của bài viết đã chọn
-                            })}
-                        />
                     </div>
                 </div>
                 {/* <Modal

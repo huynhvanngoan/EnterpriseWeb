@@ -510,6 +510,27 @@ const AccountManagement = () => {
                                 </Col>
                             </Row>
                         </PageHeader>
+                        <PageHeader
+                            subTitle=""
+                            style={{
+                                fontSize: 14,
+                                paddingTop: 20,
+                                paddingBottom: 20,
+                            }}
+                        >
+                            <Col span="12">
+                                <Row justify="end">
+                                    <Button
+                                        style={{ marginLeft: 10 }}
+                                        icon={<PlusOutlined />}
+                                        size="middle"
+                                        onClick={showModal}
+                                    >
+                                        {"Add Account"}
+                                    </Button>
+                                </Row>
+                            </Col>
+                        </PageHeader>
                     </div>
                 </div>
                 <div style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}>
