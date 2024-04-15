@@ -992,7 +992,6 @@ const ArticleManagerStudent = () => {
                                 <Image src={articleDetail.image} />
                             </div>
                             <Button
-                            style={{marginTop: "20px"}}
                                 key="download"
                                 onClick={() =>
                                     handleDownloadArticle(articleDetail._id)

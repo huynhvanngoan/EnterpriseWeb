@@ -988,11 +988,9 @@ const ArticleManagerStudent = () => {
                                 {formatDate(articleDetail.submitDate)}
                             </h3>
                             <h3>Image:</h3>
-                            <div>
-                                <Image src={articleDetail.image} />
-                            </div>
+                            <div></div>
+                            <Image src={articleDetail.image} />
                             <Button
-                            style={{marginTop: "20px"}}
                                 key="download"
                                 onClick={() =>
                                     handleDownloadArticle(articleDetail._id)
