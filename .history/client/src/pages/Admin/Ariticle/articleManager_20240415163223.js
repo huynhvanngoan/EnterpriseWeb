@@ -461,11 +461,11 @@ const ArticleManager = () => {
                                     </Button>
                                 </Popconfirm>
                                 <Popconfirm
-                                    title="Are you sure to reject this article?"
+                                    title="Are you sure to approve this article?"
                                     onConfirm={() =>
                                         handleApproveOrReject(
                                             record._id,
-                                            "rejected"
+                                            "re"
                                         )
                                     }
                                     okText="Yes"
@@ -480,7 +480,12 @@ const ArticleManager = () => {
                                             height: 30,
                                             marginBottom: 15,
                                         }}
-
+                                        onClick={() =>
+                                            handleApproveOrReject(
+                                                record._id,
+                                                "rejected"
+                                            )
+                                        }
                                     >
                                         {"Reject"}
                                     </Button>
