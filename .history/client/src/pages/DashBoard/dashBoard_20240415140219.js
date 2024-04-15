@@ -538,7 +538,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index+3 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }
@@ -578,7 +578,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index +2 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }

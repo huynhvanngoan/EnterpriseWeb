@@ -324,7 +324,7 @@ const DashBoard = () => {
                                                                     key={`cell-${index}`}
                                                                     fill={
                                                                         COLORS[
-                                                                            index+4 %
+                                                                            index+ %
                                                                                 COLORS.length
                                                                         ]
                                                                     }
@@ -359,21 +359,10 @@ const DashBoard = () => {
                                                     <YAxis />
                                                     <Tooltip />
                                                     <Legend />
-                                                    <Bar dataKey="count">
-                                                        {totalByStatus.map(
-                                                            (entry, index) => (
-                                                                <Cell
-                                                                    key={`cell-${index}`}
-                                                                    fill={
-                                                                        COLORS[
-                                                                            index+2 %
-                                                                                COLORS.length
-                                                                        ]
-                                                                    }
-                                                                />
-                                                            )
-                                                        )}
-                                                    </Bar>
+                                                    <Bar
+                                                        dataKey="count"
+                                                        fill={COLORS[1]}
+                                                    />
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </Col>
@@ -401,21 +390,10 @@ const DashBoard = () => {
                                                     <YAxis />
                                                     <Tooltip />
                                                     <Legend />
-                                                    <Bar dataKey="count">
-                                                        {totalByStatus.map(
-                                                            (entry, index) => (
-                                                                <Cell
-                                                                    key={`cell-${index}`}
-                                                                    fill={
-                                                                        COLORS[
-                                                                            index+1 %
-                                                                                COLORS.length
-                                                                        ]
-                                                                    }
-                                                                />
-                                                            )
-                                                        )}
-                                                    </Bar>
+                                                    <Bar
+                                                        dataKey="count"
+                                                        fill={COLORS[0]}
+                                                    />
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </Col>
@@ -455,7 +433,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index+2 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }
@@ -495,7 +473,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index+1 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }
@@ -538,7 +516,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index+3 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }
@@ -578,7 +556,7 @@ const DashBoard = () => {
                                                                 key={`cell-${index}`}
                                                                 fill={
                                                                     COLORS[
-                                                                        index +2 %
+                                                                        index %
                                                                             COLORS.length
                                                                     ]
                                                                 }
