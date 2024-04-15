@@ -436,17 +436,7 @@ const ArticleManager = () => {
                     <Row>
                         {record.status === "pending" && isMarketing() && (
                             <React.Fragment>
-                                <Popconfirm
-                                    title="Are you sure to approve this article?"
-                                    onConfirm={() =>
-                                        handleApproveOrReject(
-                                            record._id,
-                                            "approved"
-                                        )
-                                    }
-                                    okText="Yes"
-                                    cancelText="No"
-                                >
+                                
                                     <Button
                                         size="small"
                                         icon={<CheckCircleOutlined />}
@@ -460,31 +450,24 @@ const ArticleManager = () => {
                                         {"Approve"}
                                     </Button>
                                 </Popconfirm>
-                                <Popconfirm
-                                    title="Are you sure to reject this article?"
-                                    onConfirm={() =>
+                                <Button
+                                    size="small"
+                                    icon={<DeleteOutlined />}
+                                    style={{
+                                        width: 150,
+                                        borderRadius: 15,
+                                        height: 30,
+                                        marginBottom: 15,
+                                    }}
+                                    onClick={() =>
                                         handleApproveOrReject(
                                             record._id,
                                             "rejected"
                                         )
                                     }
-                                    okText="Yes"
-                                    cancelText="No"
                                 >
-                                    <Button
-                                        size="small"
-                                        icon={<DeleteOutlined />}
-                                        style={{
-                                            width: 150,
-                                            borderRadius: 15,
-                                            height: 30,
-                                            marginBottom: 15,
-                                        }}
-
-                                    >
-                                        {"Reject"}
-                                    </Button>
-                                </Popconfirm>
+                                    {"Reject"}
+                                </Button>
                             </React.Fragment>
                         )}
                         {!record.isPublic && isDepartment() && (

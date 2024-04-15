@@ -465,7 +465,7 @@ const ArticleManager = () => {
                                     onConfirm={() =>
                                         handleApproveOrReject(
                                             record._id,
-                                            "rejected"
+                                            "reject"
                                         )
                                     }
                                     okText="Yes"

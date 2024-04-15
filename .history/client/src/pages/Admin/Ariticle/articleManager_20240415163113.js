@@ -461,30 +461,34 @@ const ArticleManager = () => {
                                     </Button>
                                 </Popconfirm>
                                 <Popconfirm
-                                    title="Are you sure to reject this article?"
+                                    title="Are you sure to approve this article?"
                                     onConfirm={() =>
                                         handleApproveOrReject(
                                             record._id,
-                                            "rejected"
+                                            "approved"
                                         )
                                     }
                                     okText="Yes"
                                     cancelText="No"
                                 >
-                                    <Button
-                                        size="small"
-                                        icon={<DeleteOutlined />}
-                                        style={{
-                                            width: 150,
-                                            borderRadius: 15,
-                                            height: 30,
-                                            marginBottom: 15,
-                                        }}
-
-                                    >
-                                        {"Reject"}
-                                    </Button>
-                                </Popconfirm>
+                                <Button
+                                    size="small"
+                                    icon={<DeleteOutlined />}
+                                    style={{
+                                        width: 150,
+                                        borderRadius: 15,
+                                        height: 30,
+                                        marginBottom: 15,
+                                    }}
+                                    onClick={() =>
+                                        handleApproveOrReject(
+                                            record._id,
+                                            "rejected"
+                                        )
+                                    }
+                                >
+                                    {"Reject"}
+                                </Button>
                             </React.Fragment>
                         )}
                         {!record.isPublic && isDepartment() && (
